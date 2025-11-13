@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -22,13 +24,24 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard', absolute: false));
+    
+        $user = Auth::user();
+    
+        if ($user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->hasRole('petugas')) {
+            return redirect()->route('pickups.index');
+        } elseif ($user->hasRole('restoran_umkm')) {
+            return redirect()->route('member.dashboard');
+        } elseif ($user->hasRole('edukator')) {
+            return redirect()->route('education.manage');
+        }
+    
+        return redirect()->route('landing'); // fallback ke publik
     }
 
     /**
