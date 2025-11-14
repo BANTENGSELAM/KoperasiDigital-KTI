@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\Auth\LoginRequest;
 
 
 
@@ -24,25 +26,28 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(LoginRequest $request)
     {
         $request->authenticate();
         $request->session()->regenerate();
     
         $user = Auth::user();
     
-        if ($user->hasRole('admin')) {
-            return redirect()->route('admin.dashboard');
-        } elseif ($user->hasRole('petugas')) {
-            return redirect()->route('pickups.index');
-        } elseif ($user->hasRole('restoran_umkm')) {
-            return redirect()->route('member.dashboard');
-        } elseif ($user->hasRole('edukator')) {
-            return redirect()->route('education.manage');
-        }
-    
-        return redirect()->route('landing'); // fallback ke publik
+
+
+    // ... di dalam method store()
+    if ($user->hasRole('admin')) {
+        return redirect()->route('admin.dashboard');
+    } elseif ($user->hasRole('petugas')) {
+        return redirect()->route('pickups.index');
+    } elseif ($user->hasRole('restoran_umkm')) {
+        return redirect()->route('member.dashboard');
+    } elseif ($user->hasRole('edukator')) {
+        return redirect()->route('education.manage');
     }
+
+    return redirect()->route('landing'); // fallback ke publik
+        }
 
     /**
      * Destroy an authenticated session.

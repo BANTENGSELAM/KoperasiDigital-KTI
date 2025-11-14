@@ -27,14 +27,23 @@
 
         </div>
 
-        {{-- Tombol Aksi --}}
-        <div class="mb-6">
-            <a href="{{ route('shu.calculate') }}"
-                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Hitung Ulang SHU</a>
+       {{-- Tombol Aksi --}}
+        <div class="mb-6 flex items-center gap-2">
+            <form method="POST" action="{{ route('admin.shu.calculate') }}">
+                @csrf
+                <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                    Hitung Ulang SHU
+                </button>
+            </form>
 
-            {{-- <a href="{{ route('shu.export.pdf') }}"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded ml-2">Export PDF</a> --}}
+            {{-- jika kamu mau tetap pakai link untuk PDF --}}
+            <a href="{{ route('shu.pdf') }}"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded ml-2">
+                Unduh Laporan PDF
+            </a>
         </div>
+
 
         {{-- Tabel Distribusi SHU --}}
         <div class="bg-white shadow rounded-lg p-6">

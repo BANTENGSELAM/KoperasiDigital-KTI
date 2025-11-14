@@ -11,7 +11,7 @@
         <a href="/" class="font-bold text-lg">Koperasi Digital</a>
         <div>
             <a href="{{ route('landing') }}" class="px-3">Beranda</a>
-            <a href="{{ route('edukasi.publik') }}" class="px-3">Edukasi</a>
+            {{-- <a href="{{ route('education.public') }}" class="px-3">Edukasi</a> --}}
             @auth
                 <a href="{{ route('dashboard') }}" class="px-3">Dashboard</a>
             @else

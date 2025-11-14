@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EdukasiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     SHUController,
@@ -8,9 +9,12 @@ use App\Http\Controllers\{
     ProfileController,
     CompostBatchController,
     MemberDashboardController,
-    EducationalPostController
+    EducationalPostController,
+    AdminDashboardController
 };
 use App\Http\Controllers\Admin\AnggotaController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -47,13 +51,14 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard admin utama
     Route::get('/dashboard', [SHUController::class, 'index'])->name('dashboard');
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Manajemen anggota
     Route::resource('/anggota', AnggotaController::class);
 
     // Modul SHU
     Route::get('/shu', [SHUController::class, 'index'])->name('shu.index');
-    Route::post('/shu/calculate', [SHUController::class, 'calculate'])->name('shu.calculate');
+    Route::post('/admin/shu/calculate', [SHUController::class, 'calculate'])->name('shu.calculate');
     Route::get('/shu/chart', [SHUController::class, 'chartData'])->name('shu.chart');
     Route::get('/shu/pdf', [SHUController::class, 'exportPdf'])->name('shu.pdf');
 
@@ -68,10 +73,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')->group(function () {
-    Route::get('/pickups', [PickupController::class, 'index'])->name('pickups.index');
+    Route::get('/petugas/pickups', [PickupController::class, 'index'])->name('pickups.index');
     Route::get('/pickups/create', [PickupController::class, 'create'])->name('pickups.create');
     Route::post('/pickups', [PickupController::class, 'store'])->name('pickups.store');
     Route::patch('/pickups/{id}/status', [PickupController::class, 'updateStatus'])->name('pickups.updateStatus');
+    Route::resource('pickups', PickupController::class)->middleware('auth');
+
 });
 
 /*
@@ -97,6 +104,8 @@ Route::middleware(['auth', 'role:edukator'])->prefix('edukasi')->name('education
     Route::get('/dashboard', [EducationalPostController::class, 'manage'])->name('manage');
     Route::get('/create', [EducationalPostController::class, 'create'])->name('create');
     Route::post('/store', [EducationalPostController::class, 'store'])->name('store');
+    
+    Route::get('/edukasi', [EdukasiController::class, 'publik'])->name('edukasi.publik');
 });
 
 /*
