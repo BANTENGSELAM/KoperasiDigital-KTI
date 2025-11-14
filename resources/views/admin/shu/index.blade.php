@@ -38,7 +38,7 @@
             </form>
 
             {{-- jika kamu mau tetap pakai link untuk PDF --}}
-            <a href="{{ route('shu.pdf') }}"
+            <a href="{{ route('admin.shu.pdf') }}"
                 class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded ml-2">
                 Unduh Laporan PDF
             </a>

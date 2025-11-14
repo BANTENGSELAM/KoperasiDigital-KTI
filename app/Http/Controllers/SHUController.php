@@ -66,7 +66,7 @@ class SHUController extends Controller
             ));
         }
 
-        return redirect()->route('shu.index')->with('success', 'Perhitungan SHU berhasil dilakukan.');
+        return redirect()->route('admin.shu.index')->with('success', 'Perhitungan SHU berhasil dilakukan.');
     }
 
         public function chartData()
