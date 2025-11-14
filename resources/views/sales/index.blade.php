@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <a href="{{ route('sales.create') }}" class="btn btn-primary mb-4">+ Catat Penjualan</a>
+            <a href="{{ route('admin.sales.create') }}" class="btn btn-primary mb-4">+ Catat Penjualan</a>
 
             <div class="bg-white shadow sm:rounded-lg p-6">
                 <table class="table table-bordered w-full">
@@ -24,7 +24,7 @@
                         @forelse($sales as $s)
                             <tr>
                                 <td>{{ $s->tanggal }}</td>
-                                <td>{{ $s->batch->kode_batch }}</td>
+                                <td>{{ optional($s->batch)->kode_batch ?? 'Batch tidak ditemukan' }}</td>
                                 <td>{{ $s->pembeli }}</td>
                                 <td>{{ $s->jumlah_kg }}</td>
                                 <td>{{ number_format($s->total, 0, ',', '.') }}</td>

@@ -8,9 +8,9 @@
     <div class="py-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
 
         <div class="mb-4 flex justify-end">
-            {{-- <a href="{{ route('pickups.create') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            <a href="{{ route('member.pickups.create') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
                 + Tambah Pengambilan
-            </a> --}}
+            </a>
         </div>
 
         <div class="bg-white shadow rounded p-6">

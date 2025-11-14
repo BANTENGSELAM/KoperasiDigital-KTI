@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 use App\Models\Sale;
 use App\Models\CompostBatch;
 use App\Models\Ledger;
+use App\Models\Sales;
 use Illuminate\Http\Request;
 
 class SaleController extends Controller
 {
     public function index()
     {
-        $sales = Sale::with('batch')->latest()->get();
+        $sales = Sales::with('batch')->latest()->get();
         return view('sales.index', compact('sales'));
     }
 

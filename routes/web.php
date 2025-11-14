@@ -1,14 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PickupController;
-use App\Http\Controllers\CompostBatchController;
-use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SHUController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\PickupController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CompostBatchController;
 use App\Http\Controllers\Admin\AnggotaController;
 use App\Http\Controllers\EducationalPostController;
 use App\Http\Controllers\MemberDashboardController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,9 @@ use App\Http\Controllers\MemberDashboardController;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('/edukasi', [EducationalPostController::class, 'public'])
+            ->name('education.public');
 
 /*
 |--------------------------------------------------------------------------
@@ -86,9 +90,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
         // Dashboard Admin
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+            ->name('dashboard');
 
         // Kelola Anggota
         Route::resource('/anggota', AnggotaController::class);
@@ -98,6 +101,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Sales (Penjualan)
         Route::resource('/sales', SaleController::class);
+    
 
         // SHU
         Route::get('/shu', [SHUController::class, 'index'])->name('shu.index');
@@ -114,6 +118,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('/edukasi/store', [EducationalPostController::class, 'store'])
             ->name('education.store');
+
+        
+
     });
 });
 
