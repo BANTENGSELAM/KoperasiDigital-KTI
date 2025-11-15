@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <a href="{{ route('batches.create') }}" class="btn btn-primary mb-4">+ Batch Baru</a>
+            <a href="{{ route('admin.batches.create') }}" class="btn btn-primary mb-4">+ Batch Baru</a>
 
             <div class="bg-white shadow sm:rounded-lg p-6">
                 <table class="table table-bordered w-full">

@@ -16,7 +16,7 @@
         <a href="{{ route('education.public') }}">Edukasi</a>
 
         @auth
-            <a href="{{ route('dashboard') }}">Dashboard</a>
+            <a href="{{ route('admin.dashboard') }}">Dashboard</a>
         @else
             <a href="{{ route('login') }}">Login</a>
         @endauth

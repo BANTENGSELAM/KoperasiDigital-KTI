@@ -12,11 +12,11 @@
     <h2 class="font-bold text-lg mb-4">Petugas</h2>
 
     <ul>
-        <li><a href="{{ route('petugas.dashboard') }}" class="block py-2">Dashboard</a></li>
-        <li><a href="{{ route('petugas.pickups.index') }}" class="block py-2">Pengambilan</a></li>
-
+        <li><a href="{{ route('petugas.dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ route('petugas.pickups.index') }}">Pengambilan</a></li>
+    
         <li class="mt-4">
-            <form action="{{ route('logout') }}" method="POST">
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button class="text-red-400">Logout</button>
             </form>

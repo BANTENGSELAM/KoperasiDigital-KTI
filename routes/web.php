@@ -47,7 +47,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
 
-        Route::resource('anggota', AnggotaController::class)->names('admin.anggota');
+        Route::resource('/anggota', AnggotaController::class)->names('admin.anggota');
         // CRUD Anggota
         Route::resource('/anggota', AnggotaController::class);
 
@@ -68,25 +68,25 @@ Route::middleware(['auth', 'role:admin'])
 // =============================
 // ROLE = PETUGAS
 // =============================
-Route::middleware(['auth', 'role:petugas'])
-    ->prefix('petugas')
-    ->name('petugas.')
-    ->group(function () {
+// Route::middleware(['auth', 'role:petugas'])
+//     ->prefix('petugas')
+//     ->name('petugas.')
+//     ->group(function () {
 
-        Route::get('/dashboard', [PetugasDashboardController::class, 'index'])
-            ->name('dashboard');
+//         Route::get('/dashboard', [PetugasDashboardController::class, 'index'])
+//             ->name('dashboard');
 
-        Route::get('/pickups', [PickupController::class, 'index'])->name('pickups.index');
-        Route::get('/pickups/create', [PickupController::class, 'create'])->name('pickups.create');
-        Route::post('/pickups/store', [PickupController::class, 'store'])->name('pickups.store');
-        Route::patch('/pickups/{id}/status', [PickupController::class, 'updateStatus'])
-            ->name('pickups.updateStatus');
+//         Route::get('/pickups', [PickupController::class, 'index'])->name('pickups.index');
+//         Route::get('/pickups/create', [PickupController::class, 'create'])->name('pickups.create');
+//         Route::post('/pickups/store', [PickupController::class, 'store'])->name('pickups.store');
+//         Route::patch('/pickups/{id}/status', [PickupController::class, 'updateStatus'])
+//             ->name('pickups.updateStatus');
+//     });
+
+    Route::prefix('petugas')->middleware(['auth','role:petugas|admin'])->group(function() {
+        Route::get('/dashboard', [PetugasDashboardController::class, 'index'])->name('petugas.dashboard');
+        Route::resource('pickups', PickupController::class)->names('petugas.pickups');
     });
-
-    // Route::prefix('petugas')->middleware(['auth','role:petugas|admin'])->group(function() {
-    //     Route::get('/dashboard', [PetugasDashboardController::class, 'index'])->name('petugas.dashboard');
-    //     Route::resource('pickups', PickupController::class)->names('petugas.pickups');
-    // });
 
 
 // =============================

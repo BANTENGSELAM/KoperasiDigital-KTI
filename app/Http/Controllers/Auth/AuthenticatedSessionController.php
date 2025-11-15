@@ -36,17 +36,23 @@ class AuthenticatedSessionController extends Controller
 
 
     // ... di dalam method store()
-    if ($user->hasRole('admin')) {
+    if ($request->user()->hasRole('admin')) {
         return redirect()->route('admin.dashboard');
-    } elseif ($user->hasRole('petugas')) {
-        return redirect()->route('pickups.index');
-    } elseif ($user->hasRole('restoran_umkm')) {
+    }
+    
+    if ($request->user()->hasRole('petugas')) {
+        return redirect()->route('petugas.dashboard');
+    }
+    
+    if ($request->user()->hasRole('restoran_umkm')) {
         return redirect()->route('member.dashboard');
-    } elseif ($user->hasRole('edukator')) {
+    }
+    
+    if ($request->user()->hasRole('edukator')) {
         return redirect()->route('education.manage');
     }
 
-    return redirect()->route('landing'); // fallback ke publik
+    return redirect()->route('home'); //  fallback ke home
         }
 
     /**
