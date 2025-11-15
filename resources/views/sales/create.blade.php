@@ -1,48 +1,27 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Catat Penjualan Pupuk') }}
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow sm:rounded-lg p-6">
-                <form method="POST" action="{{ route('admin.sales.store') }}">
-                    @csrf
+@section('content')
+<h1 class="text-xl font-bold mb-6">Catat Penjualan Pupuk</h1>
 
-                    <div class="mb-3">
-                        <label for="batch_id" class="form-label">Batch</label>
-                        <select name="batch_id" class="form-control" required>
-                            @foreach($batches as $b)
-                                <option value="{{ $b->id }}">{{ $b->kode_batch }} ({{ $b->berat_keluar_kg }} kg)</option>
-                            @endforeach
-                        </select>
-                    </div>
+<form action="{{ route('admin.sales.store') }}" method="POST">
+    @csrf
 
-                    <div class="mb-3">
-                        <label for="pembeli" class="form-label">Nama Pembeli</label>
-                        <input type="text" class="form-control" name="pembeli" required>
-                    </div>
+    <label class="block mb-2 font-semibold">Pilih Batch</label>
+    <select name="batch_id" class="border p-2 w-full mb-4">
+        @foreach($batches as $b)
+            <option value="{{ $b->id }}">{{ $b->kode_batch }}</option>
+        @endforeach
+    </select>
 
-                    <div class="mb-3">
-                        <label for="jumlah_kg" class="form-label">Jumlah Terjual (kg)</label>
-                        <input type="number" step="0.01" class="form-control" name="jumlah_kg" required>
-                    </div>
+    <label class="block mb-2 font-semibold">Pembeli</label>
+    <input type="text" name="pembeli" class="border p-2 w-full mb-4">
 
-                    <div class="mb-3">
-                        <label for="harga_per_kg" class="form-label">Harga per Kg (Rp)</label>
-                        <input type="number" step="0.01" class="form-control" name="harga_per_kg" required>
-                    </div>
+    <label class="block mb-2 font-semibold">Jumlah (kg)</label>
+    <input type="number" step="0.01" name="jumlah_kg" class="border p-2 w-full mb-4">
 
-                    <div class="mb-3">
-                        <label for="tanggal" class="form-label">Tanggal Penjualan</label>
-                        <input type="date" class="form-control" name="tanggal" required>
-                    </div>
+    <label class="block mb-2 font-semibold">Harga per kg</label>
+    <input type="number" step="0.01" name="harga_per_kg" class="border p-2 w-full mb-4">
 
-                    <button type="submit" class="btn btn-success">Simpan</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</x-app-layout>
+    <button class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+</form>
+@endsection

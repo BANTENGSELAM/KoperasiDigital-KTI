@@ -19,10 +19,9 @@ class SaleController extends Controller
     public function create()
     {
         $batches = CompostBatch::all();
-
-        return view('sales.create', compact('batches'));
+        return view('admin.sales.create', compact('batches'));
     }
-
+    
     public function store(Request $request)
     {
         $request->validate([

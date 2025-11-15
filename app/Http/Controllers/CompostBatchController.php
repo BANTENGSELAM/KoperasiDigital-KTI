@@ -25,6 +25,8 @@ class CompostBatchController extends Controller
 
     public function store(Request $request)
     {
+        CompostBatch::create($request->all());
+
         $request->validate([
             'batch_id' => 'required|exists:compost_batches,id',
             'pembeli' => 'required',
@@ -52,18 +54,12 @@ class CompostBatchController extends Controller
         return view('batches.edit', compact('batch'));
     }
 
-    public function update(Request $request, CompostBatch $batch)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'berat_keluar_kg' => 'required|numeric|min:0',
-        ]);
-
-        $batch->update([
-            'berat_keluar_kg' => $request->berat_keluar_kg,
-            'tgl_selesai' => now(),
-            'status' => 'selesai',
-        ]);
-
-        return redirect()->route('batches.index')->with('success', 'Batch telah diselesaikan.');
+        $batch = CompostBatch::findOrFail($id);
+        $batch->update($request->all());
+    
+        return redirect()->route('admin.batches.index')
+                ->with('success', 'Batch berhasil diperbarui!');
     }
 }
