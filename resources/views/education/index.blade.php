@@ -1,19 +1,24 @@
-<x-app-layout>
-    <div class="max-w-6xl mx-auto py-8">
-        <h2 class="text-2xl font-semibold mb-4">Artikel Edukasi & Sosialisasi</h2>
+@extends('layouts.public')
 
-        <div class="grid md:grid-cols-3 gap-6">
-            @foreach ($posts as $post)
-                <div class="bg-white shadow rounded p-4">
-                    @if($post->thumbnail)
-                        <img src="{{ asset('storage/'.$post->thumbnail) }}" class="rounded mb-3" alt="thumbnail">
-                    @endif
-                    <h3 class="text-lg font-bold mb-2">{{ $post->judul }}</h3>
-                    <a href="{{ route('education.show', $post->id) }}" class="text-blue-600 hover:underline">Baca Selengkapnya</a>
-                </div>
-            @endforeach
-        </div>
+@section('content')
 
-        <div class="mt-6">{{ $posts->links() }}</div>
+<h1 class="text-3xl font-bold mb-6">Edukasi Publik</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+@foreach($posts as $p)
+    <div class="bg-white shadow p-4 rounded">
+        <h3 class="font-semibold text-lg">{{ $p->judul }}</h3>
+        <p class="text-gray-500 text-sm">{{ $p->created_at->format('d M Y') }}</p>
+        <p class="mt-2 text-gray-700">{{ Str::limit($p->konten, 150) }}</p>
+
+        <a href="{{ route('education.show', $p->id) }}"
+            class="text-green-600 mt-3 inline-block">
+            Baca Selengkapnya →
+        </a>
     </div>
-</x-app-layout>
+@endforeach
+</div>
+
+{{ $posts->links() }}
+
+@endsection

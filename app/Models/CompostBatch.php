@@ -15,7 +15,9 @@ class CompostBatch extends Model
         'status',
         'keterangan',
     ];
-    
-    public function pickups() { return $this->belongsToMany(Pickup::class,'batch_pickup','batch_id','pickup_id'); }
-    public function sales() { return $this->hasMany(Sale::class,'batch_id'); }
+
+    public function sales()
+    {
+        return $this->hasMany(Sales::class, 'batch_id');
+    }
 }

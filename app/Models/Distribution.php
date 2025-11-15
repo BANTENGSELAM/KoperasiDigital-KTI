@@ -2,19 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Distribution extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
-        'total_kontribusi',
-        'persentase',
         'jumlah_diterima',
-        'periode',
+        'persentase',
+        'tahun',
     ];
 
     public function user()

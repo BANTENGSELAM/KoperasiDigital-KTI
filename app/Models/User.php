@@ -2,17 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles; // ← penting!
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles; // ← tambahkan HasRoles di sini
-    use HasRoles;
+    use Notifiable, HasRoles;
 
     protected $fillable = [
         'name',
@@ -20,13 +16,23 @@ class User extends Authenticatable
         'password',
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    public function pickups()
+    {
+        return $this->hasMany(Pickup::class);
+    }
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    public function contributions()
+    {
+        return $this->hasMany(Contribution::class);
+    }
+
+    public function distributions()
+    {
+        return $this->hasMany(Distribution::class);
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(EducationalPost::class);
+    }
 }

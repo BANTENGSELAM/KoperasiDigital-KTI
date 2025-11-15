@@ -2,18 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class EducationalPost extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
         'judul',
         'konten',
-        'thumbnail',
     ];
 
     public function user()

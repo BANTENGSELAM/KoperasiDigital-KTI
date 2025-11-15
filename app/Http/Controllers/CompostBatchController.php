@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CompostBatch;
+use App\Models\Sales;
 use App\Models\Pickup;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\CompostBatch;
+use Illuminate\Http\Request;
 
 class CompostBatchController extends Controller
 {
@@ -19,28 +20,31 @@ class CompostBatchController extends Controller
     {
         // pilih pickup yang sudah selesai untuk diolah
         $pickups = Pickup::where('status', 'selesai')->get();
-        return view('batches.create', compact('pickups'));
+        return view('admin.batches.create', compact('pickups'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'pickup_ids' => 'required|array',
+            'batch_id' => 'required|exists:compost_batches,id',
+            'pembeli' => 'required',
+            'jumlah_kg' => 'required|numeric',
+            'harga_per_kg' => 'required|numeric',
+            'tanggal' => 'required|date',
         ]);
 
-        $totalBerat = Pickup::whereIn('id', $request->pickup_ids)->sum('berat_kg');
+        $total = $request->jumlah_kg * $request->harga_per_kg;
 
-        CompostBatch::create([
-            'kode_batch' => 'CB' . now()->format('Ymd') . Str::upper(Str::random(4)),
-            'berat_masuk_kg' => $totalBerat,
-            'tgl_mulai' => now(),
-            'status' => 'proses',
+        Sales::create([
+            'batch_id' => $request->batch_id,
+            'pembeli' => $request->pembeli,
+            'jumlah_kg' => $request->jumlah_kg,
+            'harga_per_kg' => $request->harga_per_kg,
+            'tanggal' => $request->tanggal,
+            'total' => $total,
         ]);
 
-        // Update pickup menjadi "diolah"
-        Pickup::whereIn('id', $request->pickup_ids)->update(['status' => 'diolah']);
-
-        return redirect()->route('batches.index')->with('success', 'Batch pengolahan pupuk berhasil dibuat.');
+        return redirect()->route('admin.sales.index')->with('success', 'Penjualan berhasil dicatat');
     }
 
     public function edit(CompostBatch $batch)
