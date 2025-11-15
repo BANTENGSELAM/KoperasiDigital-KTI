@@ -1,51 +1,54 @@
 @extends('layouts.admin')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-6">Daftar Batch Kompos</h1>
+<h2 class="text-2xl font-bold mb-4">Daftar Batch Kompos</h2>
 
-<div class="flex justify-end mb-4">
-    <a href="{{ route('admin.batches.create') }}"
-       class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-        + Batch Baru
-    </a>
-</div>
+<a href="{{ route('admin.batches.create') }}" class="bg-green-600 text-white px-4 py-2 rounded mb-4 inline-block">
+    + Batch Baru
+</a>
 
-<div class="bg-white shadow rounded p-6">
-    <table class="w-full border text-sm">
-        <thead class="bg-gray-100">
-            <tr>
-                <th class="border p-2">Kode Batch</th>
-                <th class="border p-2">Berat Masuk (kg)</th>
-                <th class="border p-2">Tanggal Mulai</th>
-                <th class="border p-2">Status</th>
-                <th class="border p-2">Aksi</th>
-            </tr>
-        </thead>
+@if(session('success'))
+    <div class="bg-green-200 text-green-800 p-3 mb-4 rounded">
+        {{ session('success') }}
+    </div>
+@endif
 
-        <tbody>
-            @forelse($batches as $b)
-                <tr>
-                    <td class="border p-2">{{ $b->kode_batch }}</td>
-                    <td class="border p-2">{{ $b->berat_masuk_kg }}</td>
-                    <td class="border p-2">{{ $b->tgl_mulai ?? '-' }}</td>
-                    <td class="border p-2 capitalize">
-                        {{ $b->status }}
-                    </td>
-                    <td class="border p-2">
-                        <a href="{{ route('admin.batches.edit', $b->id) }}" class="text-blue-600 hover:underline">
-                            Edit
-                        </a>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" class="text-center text-gray-500 p-4">
-                        Belum ada batch kompos.
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
+<table class="w-full bg-white shadow rounded">
+    <thead>
+        <tr class="bg-gray-100">
+            <th class="p-3 border">Kode Batch</th>
+            <th class="p-3 border">Pickup</th>
+            <th class="p-3 border">Berat Kompos</th>
+            <th class="p-3 border">Tanggal Produksi</th>
+            <th class="p-3 border">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($batches as $batch)
+        <tr>
+            <td class="border p-3">{{ $batch->kode_batch }}</td>
+            <td class="border p-3">{{ $batch->pickup->lokasi ?? '-' }}</td>
+            <td class="border p-3">{{ $batch->berat_kompos }} kg</td>
+            <td class="border p-3">{{ $batch->tanggal_produksi }}</td>
+            <td class="border p-3">
 
-    </table>
-</div>
+                <a href="{{ route('admin.batches.edit', $batch->id) }}" class="text-blue-600">Edit</a>
+
+                <form action="{{ route('admin.batches.destroy', $batch->id) }}" method="POST" class="inline-block ml-2">
+                    @csrf
+                    @method('DELETE')
+                    <button onclick="return confirm('Yakin hapus batch?')" class="text-red-600">
+                        Hapus
+                    </button>
+                </form>
+
+            </td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="5" class="text-center p-3">Belum ada batch.</td>
+        </tr>
+        @endforelse
+    </tbody>
+</table>
 @endsection

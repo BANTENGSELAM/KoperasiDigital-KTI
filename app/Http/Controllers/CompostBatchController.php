@@ -2,67 +2,74 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sales;
-use App\Models\Pickup;
-use Illuminate\Support\Str;
 use App\Models\CompostBatch;
+use App\Models\Pickup;
 use Illuminate\Http\Request;
 
 class CompostBatchController extends Controller
 {
     public function index()
     {
-        $batches = CompostBatch::latest()->get();
+        $batches = CompostBatch::with('pickup')->latest()->get();
         return view('admin.batches.index', compact('batches'));
     }
 
     public function create()
     {
-        // Ambil pickup yang sudah selesai
         $pickups = Pickup::where('status', 'selesai')->get();
-
-        // Arahkan ke view create yang benar
         return view('admin.batches.create', compact('pickups'));
     }
 
     public function store(Request $request)
     {
-        
         $request->validate([
-            'batch_id' => 'required|exists:compost_batches,id',
-            'pembeli' => 'required',
-            'jumlah_kg' => 'required|numeric',
-            'harga_per_kg' => 'required|numeric',
-            'tanggal' => 'required|date',
+            'pickup_id' => 'required|exists:pickups,id',
+            'kode_batch' => 'required|unique:compost_batches,kode_batch',
+            'berat_kompos' => 'required|numeric',
+            'tanggal_produksi' => 'required|date',
         ]);
-        
-        $total = $request->jumlah_kg * $request->harga_per_kg;
-        
-        Sales::create([
-            'batch_id' => $request->batch_id,
-            'pembeli' => $request->pembeli,
-            'jumlah_kg' => $request->jumlah_kg,
-            'harga_per_kg' => $request->harga_per_kg,
-            'tanggal' => $request->tanggal,
-            'total' => $total,
-        ]);
-        
-        CompostBatch::create($request->all());
 
-        return redirect()->route('admin.batches.index')->with('success', 'Penjualan berhasil dicatat');
+        CompostBatch::create([
+            'pickup_id' => $request->pickup_id,
+            'kode_batch' => $request->kode_batch,
+            'berat_kompos' => $request->berat_kompos,
+            'tanggal_produksi' => $request->tanggal_produksi,
+        ]);
+
+        return redirect()->route('admin.batches.index')
+            ->with('success', 'Batch kompos berhasil dibuat!');
     }
 
-    public function edit(CompostBatch $batch)
+    public function edit($id)
     {
-        return view('admin.batches.edit', compact('batch'));
+        $batch = CompostBatch::findOrFail($id);
+        $pickups = Pickup::where('status', 'selesai')->get();
+
+        return view('admin.batches.edit', compact('batch', 'pickups'));
     }
 
     public function update(Request $request, $id)
     {
         $batch = CompostBatch::findOrFail($id);
+
+        $request->validate([
+            'pickup_id' => 'required|exists:pickups,id',
+            'kode_batch' => 'required|unique:compost_batches,kode_batch,' . $batch->id,
+            'berat_kompos' => 'required|numeric',
+            'tanggal_produksi' => 'required|date',
+        ]);
+
         $batch->update($request->all());
-    
+
         return redirect()->route('admin.batches.index')
-                ->with('success', 'Batch berhasil diperbarui!');
+            ->with('success', 'Batch berhasil diperbarui!');
+    }
+
+    public function destroy($id)
+    {
+        CompostBatch::findOrFail($id)->delete();
+
+        return redirect()->route('admin.batches.index')
+            ->with('success', 'Batch berhasil dihapus!');
     }
 }

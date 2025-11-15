@@ -7,17 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class CompostBatch extends Model
 {
     protected $fillable = [
+        'pickup_id',
         'kode_batch',
-        'berat_masuk_kg',
-        'berat_keluar_kg',
-        'tgl_mulai',
-        'tgl_selesai',
-        'status',
-        'keterangan',
+        'berat_kompos',
+        'tanggal_produksi',
     ];
 
-    public function sales()
+    public function pickup()
     {
-        return $this->hasMany(Sales::class, 'batch_id');
+        return $this->belongsTo(Pickup::class);
     }
 }
