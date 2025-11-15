@@ -51,6 +51,19 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     
     Route::resource('sales', SaleController::class);
 
+    Route::get('/admin/batches', [CompostBatchController::class, 'index'])
+        ->name('admin.batches.index');
+
+    Route::get('/admin/batches/create', [CompostBatchController::class, 'create'])
+        ->name('admin.batches.create');
+
+    Route::post('/admin/batches/store', [CompostBatchController::class, 'store'])
+        ->name('admin.batches.store');
+
+    Route::get('/admin/batches/{id}/edit', [CompostBatchController::class, 'edit'])
+        ->name('admin.batches.edit');
+
+
     // SHU
     Route::get('/shu', [SHUController::class, 'index'])->name('shu.index');
     Route::post('/shu/calculate', [SHUController::class, 'calculate'])->name('shu.calculate');
