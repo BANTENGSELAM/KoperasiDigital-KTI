@@ -27,7 +27,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/edukasi', [EducationalPostController::class, 'index'])
+    ->name('education.public');
+
 
 
 // Publik melihat artikel edukasi
@@ -38,71 +40,52 @@ Route::get('/edukasi', [EducationalPostController::class, 'public'])
 // =============================
 // ROLE = ADMIN
 // =============================
-Route::middleware(['auth', 'role:admin'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
-        // Dashboard Admin
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-            ->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+        ->name('dashboard');
 
-        Route::resource('/anggota', AnggotaController::class)->names('admin.anggota');
-        // CRUD Anggota
-        Route::resource('/anggota', AnggotaController::class);
+    Route::resource('anggota', AnggotaController::class);
 
-        // Batch
-        Route::resource('/batches', CompostBatchController::class);
+    Route::resource('batches', CompostBatchController::class);
+    
+    Route::resource('sales', SaleController::class);
 
-        // Penjualan pupuk
-        Route::resource('/sales', SaleController::class);
+    // SHU
+    Route::get('/shu', [SHUController::class, 'index'])->name('shu.index');
+    Route::post('/shu/calculate', [SHUController::class, 'calculate'])->name('shu.calculate');
+    Route::get('/shu/pdf', [SHUController::class, 'exportPdf'])->name('shu.pdf');
+    Route::get('/shu/chart', [SHUController::class, 'chartData'])->name('shu.chart');
+});
 
-        // SHU
-        Route::get('/shu', [SHUController::class, 'index'])->name('shu.index');
-        Route::post('/shu/calculate', [SHUController::class, 'calculate'])->name('shu.calculate');
-        Route::get('/shu/chart', [SHUController::class, 'chartData'])->name('shu.chart');
-        Route::get('/shu/pdf', [SHUController::class, 'exportPdf'])->name('shu.pdf');
-    });
 
 
 // =============================
 // ROLE = PETUGAS
 // =============================
-// Route::middleware(['auth', 'role:petugas'])
-//     ->prefix('petugas')
-//     ->name('petugas.')
-//     ->group(function () {
 
-//         Route::get('/dashboard', [PetugasDashboardController::class, 'index'])
-//             ->name('dashboard');
+Route::middleware(['auth', 'role:petugas'])->group(function () {
+    Route::get('/petugas/dashboard', [PetugasDashboardController::class, 'index'])
+        ->name('petugas.dashboard');
 
-//         Route::get('/pickups', [PickupController::class, 'index'])->name('pickups.index');
-//         Route::get('/pickups/create', [PickupController::class, 'create'])->name('pickups.create');
-//         Route::post('/pickups/store', [PickupController::class, 'store'])->name('pickups.store');
-//         Route::patch('/pickups/{id}/status', [PickupController::class, 'updateStatus'])
-//             ->name('pickups.updateStatus');
-//     });
-
-    Route::prefix('petugas')->middleware(['auth','role:petugas|admin'])->group(function() {
-        Route::get('/dashboard', [PetugasDashboardController::class, 'index'])->name('petugas.dashboard');
-        Route::resource('pickups', PickupController::class)->names('petugas.pickups');
-    });
-
+    Route::get('/pickups', [PickupController::class, 'index'])->name('pickups.index');
+    Route::get('/pickups/create', [PickupController::class, 'create'])->name('pickups.create');
+    Route::post('/pickups/store', [PickupController::class, 'store'])->name('pickups.store');
+    Route::patch('/pickups/{id}/status', [PickupController::class, 'updateStatus'])->name('pickups.status');
+});
 
 // =============================
 // ROLE = MEMBER (UMKM/RESTORAN)
 // =============================
-Route::middleware(['auth', 'role:restoran_umkm'])
-    ->prefix('member')
-    ->name('member.')
-    ->group(function () {
+Route::middleware(['auth', 'role:restoran_umkm'])->prefix('member')->name('member.')->group(function () {
 
-        Route::get('/dashboard', [MemberDashboardController::class, 'index'])
-            ->name('dashboard');
+    Route::get('/dashboard', [MemberDashboardController::class, 'index'])
+        ->name('dashboard');
 
-        Route::get('/pickups', [PickupController::class, 'index'])->name('pickups.index');
-        
-    });
+    Route::resource('pickups', PickupController::class)
+        ->only(['index']);
+});
+
 
     // Route::prefix('member')->middleware(['auth','role:restoran_umkm'])->group(function() {
     //     Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('member.dashboard');
@@ -132,7 +115,9 @@ Route::middleware(['auth', 'role:edukator'])
 // =====================
 // PROFILE
 // =====================
-Route::middleware('auth')->group(function () {
+
+Route::middleware(['auth'])->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
