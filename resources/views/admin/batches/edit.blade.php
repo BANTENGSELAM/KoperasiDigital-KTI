@@ -11,17 +11,18 @@
 
         <div>
             <label>Kode Batch</label>
-            <input type="text" name="kode_batch" class="w-full border p-2"
-                   value="{{ old('kode_batch', $batch->kode_batch) }}">
+            <input type="text" name="kode_batch"
+                   value="{{ $batch->kode_batch }}"
+                   class="w-full border p-2" required>
         </div>
 
         <div>
             <label>Pilih Pickup</label>
-            <select name="pickup_id" class="w-full border p-2">
+            <select name="pickup_id" class="w-full border p-2" required>
                 @foreach($pickups as $p)
                     <option value="{{ $p->id }}"
-                        {{ $batch->pickup_id == $p->id ? 'selected' : '' }}>
-                        {{ $p->lokasi }} — {{ $p->berat }} kg
+                        @if($batch->pickup_id == $p->id) selected @endif>
+                        {{ $p->lokasi }} — {{ $p->berat }} kg ({{ $p->tanggal }})
                     </option>
                 @endforeach
             </select>
@@ -29,34 +30,37 @@
 
         <div>
             <label>Berat Masuk (kg)</label>
-            <input type="number" name="berat_masuk_kg" step="0.01" class="w-full border p-2"
-                   value="{{ old('berat_masuk_kg', $batch->berat_masuk_kg) }}">
+            <input type="number" step="0.01" name="berat_masuk_kg"
+                   value="{{ $batch->berat_masuk_kg }}"
+                   class="w-full border p-2" required>
         </div>
 
         <div>
             <label>Berat Keluar (kg)</label>
-            <input type="number" name="berat_keluar_kg" step="0.01" class="w-full border p-2"
-                   value="{{ old('berat_keluar_kg', $batch->berat_keluar_kg) }}">
+            <input type="number" step="0.01" name="berat_keluar_kg"
+                   value="{{ $batch->berat_keluar_kg }}"
+                   class="w-full border p-2">
         </div>
 
         <div>
             <label>Tanggal Mulai</label>
-            <input type="date" name="tgl_mulai" class="w-full border p-2"
-                   value="{{ old('tgl_mulai', $batch->tgl_mulai) }}">
+            <input type="date" name="tgl_mulai"
+                   value="{{ $batch->tgl_mulai }}"
+                   class="w-full border p-2" required>
         </div>
 
         <div>
             <label>Tanggal Selesai</label>
-            <input type="date" name="tgl_selesai" class="w-full border p-2"
-                   value="{{ old('tgl_selesai', $batch->tgl_selesai) }}">
+            <input type="date" name="tgl_selesai"
+                   value="{{ $batch->tgl_selesai }}"
+                   class="w-full border p-2">
         </div>
 
         <div>
             <label>Status</label>
             <select name="status" class="w-full border p-2">
-                <option value="proses"  {{ $batch->status == 'proses' ? 'selected' : '' }}>Proses</option>
-                <option value="selesai" {{ $batch->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
-                <option value="batal"   {{ $batch->status == 'batal' ? 'selected' : '' }}>Dibatalkan</option>
+                <option value="proses"  @if($batch->status == 'proses') selected @endif>Proses</option>
+                <option value="selesai" @if($batch->status == 'selesai') selected @endif>Selesai</option>
             </select>
         </div>
 
@@ -64,12 +68,11 @@
 
     <div class="mt-4">
         <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-            Simpan Perubahan
+            Update
         </button>
 
-        <a href="{{ route('admin.batches.index') }}" class="ml-2 text-gray-600 hover:underline">
-            Batal
-        </a>
+        <a href="{{ route('admin.batches.index') }}"
+           class="ml-2 text-gray-600 hover:underline">Batal</a>
     </div>
 
 </form>

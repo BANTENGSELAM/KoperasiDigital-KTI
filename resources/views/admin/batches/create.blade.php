@@ -3,64 +3,66 @@
 @section('content')
 <h2 class="text-2xl font-bold mb-4">Buat Batch Kompos Baru</h2>
 
-<form method="POST" action="{{ route('admin.batches.store') }}" class="bg-white p-6 rounded shadow max-w-xl">
+<form action="{{ route('admin.batches.store') }}" method="POST">
     @csrf
 
-    {{-- KODE BATCH --}}
-    <label class="block mb-3">
-        <span class="font-semibold">Kode Batch</span>
-        <input type="text" name="kode_batch" value="{{ old('kode_batch') }}" 
-               class="w-full border p-2 rounded" required>
-    </label>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-    {{-- BERAT MASUK --}}
-    <label class="block mb-3">
-        <span class="font-semibold">Berat Masuk (kg)</span>
-        <input type="number" step="0.01" name="berat_masuk_kg" value="{{ old('berat_masuk_kg') }}"
-               class="w-full border p-2 rounded" required>
-    </label>
+        <div>
+            <label>Kode Batch</label>
+            <input type="text" name="kode_batch" class="w-full border p-2" required>
+        </div>
 
-    {{-- BERAT KELUAR --}}
-    <label class="block mb-3">
-        <span class="font-semibold">Berat Keluar (kg)</span>
-        <input type="number" step="0.01" name="berat_keluar_kg" value="{{ old('berat_keluar_kg') }}"
-               class="w-full border p-2 rounded">
-        <small class="text-gray-500">Opsional — diisi setelah proses selesai</small>
-    </label>
+        <div>
+            <label>Pilih Pickup</label>
+            <select name="pickup_id" class="w-full border p-2" required>
+                <option value="">-- pilih pickup --</option>
+                @foreach($pickups as $p)
+                    <option value="{{ $p->id }}">
+                        {{ $p->lokasi }} — {{ $p->berat }} kg ({{ $p->tanggal }})
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
-    {{-- TANGGAL MULAI --}}
-    <label class="block mb-3">
-        <span class="font-semibold">Tanggal Mulai</span>
-        <input type="date" name="tgl_mulai" value="{{ old('tgl_mulai') }}"
-               class="w-full border p-2 rounded" required>
-    </label>
+        <div>
+            <label>Berat Masuk (kg)</label>
+            <input type="number" name="berat_masuk_kg" step="0.01" class="w-full border p-2" required>
+        </div>
 
-    {{-- TANGGAL SELESAI --}}
-    <label class="block mb-3">
-        <span class="font-semibold">Tanggal Selesai</span>
-        <input type="date" name="tgl_selesai" value="{{ old('tgl_selesai') }}"
-               class="w-full border p-2 rounded">
-        <small class="text-gray-500">Opsional — diisi setelah proses kompos selesai</small>
-    </label>
+        <div>
+            <label>Berat Keluar (kg)</label>
+            <input type="number" name="berat_keluar_kg" step="0.01" class="w-full border p-2">
+        </div>
 
-    {{-- STATUS --}}
-    <label class="block mb-3">
-        <span class="font-semibold">Status</span>
-        <select name="status" class="w-full border p-2 rounded" required>
-            <option value="proses" {{ old('status') == 'proses' ? 'selected' : '' }}>Proses</option>
-            <option value="selesai" {{ old('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
-            <option value="dibatalkan" {{ old('status') == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
-        </select>
-    </label>
+        <div>
+            <label>Tanggal Mulai</label>
+            <input type="date" name="tgl_mulai" class="w-full border p-2" required>
+        </div>
 
-    {{-- KETERANGAN --}}
-    <label class="block mb-3">
-        <span class="font-semibold">Keterangan</span>
-        <textarea name="keterangan" class="w-full border p-2 rounded" rows="3">{{ old('keterangan') }}</textarea>
-    </label>
+        <div>
+            <label>Tanggal Selesai</label>
+            <input type="date" name="tgl_selesai" class="w-full border p-2">
+        </div>
 
-    <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-        Simpan Batch
-    </button>
+        <div>
+            <label>Status</label>
+            <select name="status" class="w-full border p-2">
+                <option value="proses">Proses</option>
+                <option value="selesai">Selesai</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="mt-4">
+        <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            Simpan
+        </button>
+        <a href="{{ route('admin.batches.index') }}" class="ml-2 text-gray-600 hover:underline">
+            Batal
+        </a>
+    </div>
+
 </form>
 @endsection
