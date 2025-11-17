@@ -11,21 +11,11 @@ class MemberDashboardController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-
-        $totalKontribusi = Contribution::where('user_id', $user->id)->sum('berat_sampah');
-        $totalSHU = Distribution::where('user_id', $user->id)->sum('jumlah_diterima');
-        $jadwalTerbaru = Pickup::where('user_id', $user->id)
-                                ->latest()
-                                ->take(5)
-                                ->get();
-
-        return view('member.dashboard', compact(
-            'user',
-            'totalKontribusi',
-            'totalSHU',
-            'jadwalTerbaru'
-        ));
+        $user = auth()->user();
+        $totalKontribusi = \App\Models\Contribution::where('user_id', $user->id)->sum('berat_sampah');
+        $totalSHU = \App\Models\Distribution::where('user_id',$user->id)->sum('jumlah_diterima');
+        $jadwal = Pickup::where('user_id',$user->id)->latest()->take(5)->get();
+        return view('member.dashboard', compact('user','totalKontribusi','totalSHU','jadwal'));
     }
 
     

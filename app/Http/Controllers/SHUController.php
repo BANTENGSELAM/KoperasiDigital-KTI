@@ -28,46 +28,40 @@ class SHUController extends Controller
     }
 
     // Perhitungan dan distribusi SHU otomatis
-    public function calculate()
+   public function calculate()
     {
         $totalPendapatan = Sales::sum('total');
-        $totalPengeluaran = Ledger::where('type', 'expense')->sum('amount');
-        $shuBersih = $totalPendapatan - $totalPengeluaran;
+        $totalExpense = Ledger::where('type','expense')->sum('amount');
+        $labaBersih = $totalPendapatan - $totalExpense;
 
-        // Ambil total kontribusi semua anggota
-        $totalKontribusi = Contribution::sum('berat_sampah');
-
-        if ($totalKontribusi <= 0 || $shuBersih <= 0) {
-            return back()->with('error', 'Tidak ada data kontribusi atau SHU belum tersedia.');
+        if($labaBersih <= 0) {
+            return back()->with('error','Tidak ada laba bersih untuk dibagikan.');
         }
 
-        // Reset distribusi sebelumnya (opsional)
-        Distribution::truncate();
+        $kontribusiPerUser = \App\Models\Contribution::selectRaw('user_id, SUM(berat_sampah) as total_berat')
+            ->groupBy('user_id')
+            ->get();
 
-        // Bagi SHU berdasarkan kontribusi sampah
-        $contributions = Contribution::with('user')->get();
-        foreach ($contributions as $c) {
-            $persentase = $c->berat_sampah / $totalKontribusi;
-            $jumlah_diterima = $shuBersih * $persentase;
+        $totalBerat = $kontribusiPerUser->sum('total_berat');
 
-            Distribution::create([
-                'user_id' => $c->user_id,
-                'total_kontribusi' => $c->berat_sampah,
-                'persentase' => round($persentase * 100, 2),
-                'jumlah_diterima' => round($jumlah_diterima, 2),
-                'periode' => Carbon::now()->format('Y-m'),
+        DB::transaction(function() use($kontribusiPerUser,$labaBersih,$totalBerat){
+            // hapus distribusi lama jika perlu
+            \App\Models\Distribution::truncate();
 
-                
-            ]);
+            foreach($kontribusiPerUser as $c){
+                $share = ($totalBerat>0) ? ($c->total_berat / $totalBerat) : 0;
+                $amount = round($labaBersih * $share, 2);
+                \App\Models\Distribution::create([
+                    'user_id'=>$c->user_id,
+                    'kontribusi'=>$c->total_berat,
+                    'jumlah_diterima'=>$amount,
+                ]);
+            }
+        });
 
-            $c->user->notify(new \App\Notifications\SHUCalculatedNotification(
-                round($jumlah_diterima, 2),
-                Carbon::now()->format('Y-m')
-            ));
-        }
-
-        return redirect()->route('admin.shu.index')->with('success', 'Perhitungan SHU berhasil dilakukan.');
+        return redirect()->route('admin.shu.index')->with('success','SHU berhasil dihitung.');
     }
+
 
         public function chartData()
     {

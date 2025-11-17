@@ -19,10 +19,23 @@ class AnggotaController extends Controller
         return view('admin.anggota.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $r)
     {
-        // jika mau tambah anggota manual, tinggal isi validasi & simpan
-        return back()->with('info', 'Fitur belum diimplementasikan');
+        $r->validate([
+            'name'=>'required',
+            'email'=>'required|email|unique:users,email',
+            'password'=>'required|min:6',
+            'role'=>'required|in:restoran_umkm,petugas,edukator'
+        ]);
+
+        $user = \App\Models\User::create([
+            'name'=>$r->name,
+            'email'=>$r->email,
+            'password'=>bcrypt($r->password)
+        ]);
+        $user->assignRole($r->role);
+
+        return redirect()->route('admin.anggota.index')->with('success','Anggota dibuat.');
     }
 
     public function show(User $anggotum)
