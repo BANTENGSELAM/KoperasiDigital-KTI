@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class CompostBatch extends Model
 {
     protected $fillable = [
-        'pickup_id',
         'kode_batch',
-        'berat_kompos',
-        'tanggal_produksi',
+        'berat_masuk_kg',
+        'berat_keluar_kg',
+        'tgl_mulai',
+        'tgl_selesai',
+        'status',
+        'keterangan'
     ];
 
-    public function pickup()
-    {
-        return $this->belongsTo(Pickup::class);
-    }
+    protected $table = 'compost_batches';
 }

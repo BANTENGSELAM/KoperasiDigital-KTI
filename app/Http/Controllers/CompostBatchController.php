@@ -10,8 +10,7 @@ class CompostBatchController extends Controller
 {
     public function index()
     {
-        $batches = CompostBatch::latest()->get();
-
+        $batches = CompostBatch::orderBy('created_at', 'desc')->get();
         return view('admin.batches.index', compact('batches'));
     }
 
@@ -26,19 +25,26 @@ class CompostBatchController extends Controller
     {
         $request->validate([
             'kode_batch' => 'required|unique:compost_batches,kode_batch',
-            'berat_masuk_kg' => 'required|numeric',
+            'berat_masuk_kg' => 'required|numeric|min:0.1',
+            'berat_keluar_kg' => 'nullable|numeric|min:0',
             'tgl_mulai' => 'required|date',
+            'tgl_selesai' => 'nullable|date|after_or_equal:tgl_mulai',
+            'status' => 'required|in:proses,selesai,dibatalkan',
+            'keterangan' => 'nullable|string',
         ]);
 
         CompostBatch::create([
-            'kode_batch' => $request->kode_batch,
-            'berat_masuk_kg' => $request->berat_masuk_kg,
-            'tgl_mulai' => $request->tgl_mulai,
-            'status' => 'proses'
+            'kode_batch'      => $request->kode_batch,
+            'berat_masuk_kg'  => $request->berat_masuk_kg,
+            'berat_keluar_kg' => $request->berat_keluar_kg,
+            'tgl_mulai'       => $request->tgl_mulai,
+            'tgl_selesai'     => $request->tgl_selesai,
+            'status'          => $request->status,
+            'keterangan'      => $request->keterangan,
         ]);
 
         return redirect()->route('admin.batches.index')
-            ->with('success', 'Batch berhasil dibuat.');
+            ->with('success', 'Batch kompos berhasil dibuat!');
     }
 
     public function destroy($id)
