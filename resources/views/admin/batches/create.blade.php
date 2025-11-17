@@ -5,7 +5,7 @@
     <form action="{{ route('admin.batches.store') }}" method="POST">
         @csrf
 
-        <div class="mb-4">
+        {{-- <div class="mb-4">
             <label class="block font-semibold">Pilih Pickup</label>
             <select name="pickup_id" class="w-full border p-2 rounded">
                 <option value="">-- Pilih Pickup --</option>
@@ -15,7 +15,7 @@
                     </option>
                 @endforeach
             </select>
-        </div>
+        </div> --}}
 
         <div class="grid grid-cols-2 gap-4">
 

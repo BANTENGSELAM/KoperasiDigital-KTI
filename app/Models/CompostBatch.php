@@ -11,7 +11,7 @@ class CompostBatch extends Model
 
     protected $fillable = [
         'kode_batch',
-        'pickup_id',
+        // 'pickup_id',
         'berat_masuk_kg',
         'berat_keluar_kg',
         'tgl_mulai',

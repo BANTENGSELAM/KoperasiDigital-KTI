@@ -16,7 +16,7 @@
                    class="w-full border p-2" required>
         </div>
 
-        <div>
+        {{-- <div>
             <label>Pilih Pickup</label>
             <select name="pickup_id" class="w-full border p-2" required>
                 @foreach($pickups as $p)
@@ -26,7 +26,7 @@
                     </option>
                 @endforeach
             </select>
-        </div>
+        </div> --}}
 
         <div>
             <label>Berat Masuk (kg)</label>

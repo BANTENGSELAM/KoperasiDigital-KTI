@@ -11,8 +11,9 @@
         <thead class="bg-gray-100">
             <tr>
                 <th class="border p-2">Kode</th>
-                <th class="border p-2">Pickup</th>
+                {{-- <th class="border p-2">Pickup</th> --}}
                 <th class="border p-2">Berat Masuk</th>
+                <th class="border p-2">Berat Keluar</th>
                 <th class="border p-2">Tanggal Mulai</th>
                 <th class="border p-2">Status</th>
                 <th class="border p-2">Aksi</th>
@@ -23,14 +24,15 @@
             @forelse($batches as $b)
                 <tr>
                     <td class="border p-2">{{ $b->kode_batch }}</td>
-                    <td class="border p-2">
+                    {{-- <td class="border p-2">
                         @if ($b->pickup)
                             Pickup #{{ $b->pickup->id }} — {{ $b->pickup->lokasi }}
                         @else
                             <span class="text-gray-500 italic">Tidak ada</span>
                         @endif
-                    </td>
+                    </td> --}}
                     <td class="border p-2">{{ $b->berat_masuk_kg }} kg</td>
+                    <td class="border p-2">{{ $b->berat_keluar_kg }} kg</td>
                     <td class="border p-2">{{ $b->tgl_mulai }}</td>
                     <td class="border p-2">{{ ucfirst($b->status) }}</td>
 

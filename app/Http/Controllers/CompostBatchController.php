@@ -26,7 +26,7 @@ class CompostBatchController extends Controller
      public function store(Request $request)
     {
         $request->validate([
-            'pickup_id' => 'required|exists:pickups,id',
+            // 'pickup_id' => 'required|exists:pickups,id',
             'kode_batch' => 'required|string',
             'berat_masuk_kg' => 'required|numeric',
             'tgl_mulai' => 'required|date',
@@ -54,7 +54,7 @@ class CompostBatchController extends Controller
         $batch = CompostBatch::findOrFail($id);
 
         $request->validate([
-            'pickup_id' => 'required|exists:pickups,id',
+            // 'pickup_id' => 'required|exists:pickups,id',
             'kode_batch' => 'required|string',
             'berat_masuk_kg' => 'required|numeric',
             'tgl_mulai' => 'required|date',
