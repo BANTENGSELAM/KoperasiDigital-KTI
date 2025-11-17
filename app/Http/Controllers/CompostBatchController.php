@@ -21,6 +21,33 @@ class CompostBatchController extends Controller
         return view('admin.batches.create', compact('pickups'));
     }
 
+    public function edit($id)
+    {
+        $batch = CompostBatch::findOrFail($id);
+        $pickups = Pickup::where('status', 'selesai')->get();
+
+        return view('admin.batches.edit', compact('batch', 'pickups'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'kode_batch' => 'required',
+            'pickup_id' => 'required|exists:pickups,id',
+            'berat_masuk_kg' => 'required|numeric',
+            'berat_keluar_kg' => 'nullable|numeric',
+            'tgl_mulai' => 'required|date',
+            'tgl_selesai' => 'nullable|date',
+            'status' => 'required'
+        ]);
+
+        $batch = CompostBatch::findOrFail($id);
+        $batch->update($request->all());
+
+        return redirect()->route('admin.batches.index')->with('success', 'Batch berhasil diperbarui.');
+    }
+
+
     public function store(Request $request)
     {
         $request->validate([

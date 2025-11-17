@@ -1,57 +1,76 @@
 @extends('layouts.admin')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-6">Edit Batch Kompos</h1>
+<h2 class="text-2xl font-bold mb-4">Edit Batch Kompos</h2>
 
-<div class="bg-white shadow rounded p-6">
+<form action="{{ route('admin.batches.update', $batch->id) }}" method="POST">
+    @csrf
+    @method('PUT')
 
-    <form action="{{ route('admin.batches.update', $batch->id) }}" method="POST">
-        @csrf
-        @method('PUT')
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <div class="mb-4">
-            <label class="font-semibold">Kode Batch</label>
-            <input type="text" name="kode_batch"
-                value="{{ $batch->kode_batch }}"
-                class="border p-2 w-full rounded"
-                required>
+        <div>
+            <label>Kode Batch</label>
+            <input type="text" name="kode_batch" class="w-full border p-2"
+                   value="{{ old('kode_batch', $batch->kode_batch) }}">
         </div>
 
-        <div class="mb-4">
-            <label class="font-semibold">Berat Masuk (kg)</label>
-            <input type="number" step="0.01" name="berat_masuk_kg"
-                value="{{ $batch->berat_masuk_kg }}"
-                class="border p-2 w-full rounded"
-                required>
-        </div>
-
-        <div class="mb-4">
-            <label class="font-semibold">Tanggal Mulai</label>
-            <input type="date" name="tgl_mulai"
-                value="{{ $batch->tgl_mulai }}"
-                class="border p-2 w-full rounded">
-        </div>
-
-        <div class="mb-4">
-            <label class="font-semibold">Status</label>
-            <select name="status" class="border p-2 w-full rounded">
-                <option value="proses" @selected($batch->status == 'proses')>Proses</option>
-                <option value="selesai" @selected($batch->status == 'selesai')>Selesai</option>
-                <option value="dibatalkan" @selected($batch->status == 'dibatalkan')>Dibatalkan</option>
+        <div>
+            <label>Pilih Pickup</label>
+            <select name="pickup_id" class="w-full border p-2">
+                @foreach($pickups as $p)
+                    <option value="{{ $p->id }}"
+                        {{ $batch->pickup_id == $p->id ? 'selected' : '' }}>
+                        {{ $p->lokasi }} — {{ $p->berat }} kg
+                    </option>
+                @endforeach
             </select>
         </div>
 
-        <div class="mb-4">
-            <label class="font-semibold">Keterangan</label>
-            <textarea name="keterangan" class="border p-2 w-full rounded" rows="3">
-                {{ $batch->keterangan }}
-            </textarea>
+        <div>
+            <label>Berat Masuk (kg)</label>
+            <input type="number" name="berat_masuk_kg" step="0.01" class="w-full border p-2"
+                   value="{{ old('berat_masuk_kg', $batch->berat_masuk_kg) }}">
         </div>
 
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        <div>
+            <label>Berat Keluar (kg)</label>
+            <input type="number" name="berat_keluar_kg" step="0.01" class="w-full border p-2"
+                   value="{{ old('berat_keluar_kg', $batch->berat_keluar_kg) }}">
+        </div>
+
+        <div>
+            <label>Tanggal Mulai</label>
+            <input type="date" name="tgl_mulai" class="w-full border p-2"
+                   value="{{ old('tgl_mulai', $batch->tgl_mulai) }}">
+        </div>
+
+        <div>
+            <label>Tanggal Selesai</label>
+            <input type="date" name="tgl_selesai" class="w-full border p-2"
+                   value="{{ old('tgl_selesai', $batch->tgl_selesai) }}">
+        </div>
+
+        <div>
+            <label>Status</label>
+            <select name="status" class="w-full border p-2">
+                <option value="proses"  {{ $batch->status == 'proses' ? 'selected' : '' }}>Proses</option>
+                <option value="selesai" {{ $batch->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                <option value="batal"   {{ $batch->status == 'batal' ? 'selected' : '' }}>Dibatalkan</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="mt-4">
+        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
             Simpan Perubahan
         </button>
-    </form>
 
-</div>
+        <a href="{{ route('admin.batches.index') }}" class="ml-2 text-gray-600 hover:underline">
+            Batal
+        </a>
+    </div>
+
+</form>
 @endsection
