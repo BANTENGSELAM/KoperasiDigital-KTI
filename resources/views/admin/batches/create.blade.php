@@ -1,68 +1,68 @@
-@extends('layouts.admin')
+<x-admin-layout>
 
-@section('content')
-<h2 class="text-2xl font-bold mb-4">Buat Batch Kompos Baru</h2>
+    <h1 class="text-xl font-bold mb-4">Buat Batch Kompos Baru</h1>
 
-<form action="{{ route('admin.batches.store') }}" method="POST">
-    @csrf
+    <form action="{{ route('admin.batches.store') }}" method="POST">
+        @csrf
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <div>
-            <label>Kode Batch</label>
-            <input type="text" name="kode_batch" class="w-full border p-2" required>
-        </div>
-
-        <div>
-            <label>Pilih Pickup</label>
-            <select name="pickup_id" class="w-full border p-2" required>
-                <option value="">-- pilih pickup --</option>
-                @foreach($pickups as $p)
+        <div class="mb-4">
+            <label class="block font-semibold">Pilih Pickup</label>
+            <select name="pickup_id" class="w-full border p-2 rounded">
+                <option value="">-- Pilih Pickup --</option>
+                @foreach ($pickups as $p)
                     <option value="{{ $p->id }}">
-                        {{ $p->lokasi }} — {{ $p->berat }} kg ({{ $p->tanggal }})
+                        {{ $p->id }} - {{ $p->lokasi }} ({{ $p->berat }} kg)
                     </option>
                 @endforeach
             </select>
         </div>
 
-        <div>
-            <label>Berat Masuk (kg)</label>
-            <input type="number" name="berat_masuk_kg" step="0.01" class="w-full border p-2" required>
+        <div class="grid grid-cols-2 gap-4">
+
+            <div class="mb-4">
+                <label class="block font-semibold">Kode Batch</label>
+                <input type="text" name="kode_batch" class="w-full border p-2 rounded" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-semibold">Berat Masuk (kg)</label>
+                <input type="number" step="0.01" name="berat_masuk_kg" class="w-full border p-2 rounded" required>
+            </div>
+
         </div>
 
-        <div>
-            <label>Berat Keluar (kg)</label>
-            <input type="number" name="berat_keluar_kg" step="0.01" class="w-full border p-2">
+        <div class="grid grid-cols-2 gap-4">
+
+            <div class="mb-4">
+                <label class="block font-semibold">Tanggal Mulai</label>
+                <input type="date" name="tgl_mulai" class="w-full border p-2 rounded" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-semibold">Tanggal Selesai</label>
+                <input type="date" name="tgl_selesai" class="w-full border p-2 rounded">
+            </div>
+
         </div>
 
-        <div>
-            <label>Tanggal Mulai</label>
-            <input type="date" name="tgl_mulai" class="w-full border p-2" required>
-        </div>
-
-        <div>
-            <label>Tanggal Selesai</label>
-            <input type="date" name="tgl_selesai" class="w-full border p-2">
-        </div>
-
-        <div>
-            <label>Status</label>
-            <select name="status" class="w-full border p-2">
+        <div class="mb-4">
+            <label class="block font-semibold">Status</label>
+            <select name="status" class="w-full border p-2 rounded">
                 <option value="proses">Proses</option>
                 <option value="selesai">Selesai</option>
+                <option value="dibatalkan">Dibatalkan</option>
             </select>
         </div>
 
-    </div>
+        <div class="mb-4">
+            <label class="block font-semibold">Keterangan</label>
+            <textarea name="keterangan" class="w-full border p-2 rounded"></textarea>
+        </div>
 
-    <div class="mt-4">
         <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-            Simpan
+            Simpan Batch
         </button>
-        <a href="{{ route('admin.batches.index') }}" class="ml-2 text-gray-600 hover:underline">
-            Batal
-        </a>
-    </div>
 
-</form>
-@endsection
+    </form>
+
+</x-admin-layout>

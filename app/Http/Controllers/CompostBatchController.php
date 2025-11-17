@@ -15,24 +15,24 @@ class CompostBatchController extends Controller
     }
 
     
-
     public function create()
     {
-        // Pickup yang sudah selesai dan belum digunakan di batch
-        $pickups = Pickup::where('status', 'selesai')->get();
+        // Admin bisa memilih pickup apa saja
+        $pickups = Pickup::all();
+
         return view('admin.batches.create', compact('pickups'));
     }
 
-    public function store(Request $request)
+     public function store(Request $request)
     {
         $request->validate([
-            'kode_batch'       => 'required|unique:compost_batches,kode_batch',
-            'pickup_id'        => 'required|exists:pickups,id',
-            'berat_masuk_kg'   => 'required|numeric|min:0',
-            'berat_keluar_kg'  => 'nullable|numeric|min:0',
-            'tgl_mulai'        => 'required|date',
-            'tgl_selesai'      => 'nullable|date',
-            'status'           => 'required',
+            'pickup_id' => 'required|exists:pickups,id',
+            'kode_batch' => 'required|string',
+            'berat_masuk_kg' => 'required|numeric',
+            'tgl_mulai' => 'required|date',
+            'tgl_selesai' => 'nullable|date',
+            'status' => 'required|string',
+            'keterangan' => 'nullable|string',
         ]);
 
         CompostBatch::create($request->all());
@@ -54,13 +54,13 @@ class CompostBatchController extends Controller
         $batch = CompostBatch::findOrFail($id);
 
         $request->validate([
-            'kode_batch'       => 'required',
-            'pickup_id'        => 'required|exists:pickups,id',
-            'berat_masuk_kg'   => 'required|numeric|min:0',
-            'berat_keluar_kg'  => 'nullable|numeric|min:0',
-            'tgl_mulai'        => 'required|date',
-            'tgl_selesai'      => 'nullable|date',
-            'status'           => 'required',
+            'pickup_id' => 'required|exists:pickups,id',
+            'kode_batch' => 'required|string',
+            'berat_masuk_kg' => 'required|numeric',
+            'tgl_mulai' => 'required|date',
+            'tgl_selesai' => 'nullable|date',
+            'status' => 'required|string',
+            'keterangan' => 'nullable|string',
         ]);
 
         $batch->update($request->all());
