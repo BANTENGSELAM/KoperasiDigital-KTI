@@ -17,8 +17,8 @@ class CompostBatchController extends Controller
     
     public function create()
     {
-        // Admin bisa memilih pickup apa saja
-        $pickups = Pickup::all();
+       // Pickup hanya muncul jika status = selesai
+        $pickups = Pickup::where('status', 'selesai')->get();
 
         return view('admin.batches.create', compact('pickups'));
     }
@@ -27,12 +27,11 @@ class CompostBatchController extends Controller
     {
         $request->validate([
             // 'pickup_id' => 'required|exists:pickups,id',
-            'kode_batch' => 'required|string',
-            'berat_masuk_kg' => 'required|numeric',
-            'tgl_mulai' => 'required|date',
-            'tgl_selesai' => 'nullable|date',
-            'status' => 'required|string',
-            'keterangan' => 'nullable|string',
+            'kode_batch' => 'required',
+            'pickup_id' => 'required|exists:pickups,id',
+            'berat_masuk' => 'required|numeric',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'nullable|date',
         ]);
 
         CompostBatch::create($request->all());
@@ -43,30 +42,26 @@ class CompostBatchController extends Controller
 
     public function edit($id)
     {
-        $batch   = CompostBatch::findOrFail($id);
         $pickups = Pickup::where('status', 'selesai')->get();
 
         return view('admin.batches.edit', compact('batch', 'pickups'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, CompostBatch $batch)
     {
-        $batch = CompostBatch::findOrFail($id);
-
         $request->validate([
-            // 'pickup_id' => 'required|exists:pickups,id',
-            'kode_batch' => 'required|string',
-            'berat_masuk_kg' => 'required|numeric',
-            'tgl_mulai' => 'required|date',
-            'tgl_selesai' => 'nullable|date',
-            'status' => 'required|string',
-            'keterangan' => 'nullable|string',
+            'kode_batch' => 'required',
+            'pickup_id' => 'required|exists:pickups,id',
+            'berat_masuk' => 'required|numeric',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'nullable|date',
         ]);
 
         $batch->update($request->all());
 
-        return redirect()->route('admin.batches.index')
-            ->with('success', 'Batch kompos berhasil diperbarui!');
+        return redirect()
+            ->route('admin.batches.index')
+            ->with('success', 'Batch berhasil diperbarui');
     }
 
     public function destroy($id)

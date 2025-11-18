@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sale;
-use App\Models\Sales;
+use App\Models\Sales; // model kamu bernama Sales
 use App\Models\CompostBatch;
 use Illuminate\Http\Request;
 
@@ -11,45 +10,37 @@ class SaleController extends Controller
 {
     public function index()
     {
-        $sales = Sales::with('batch')->get();
-
-        return view('sales.index', compact('sales'));
+        $sales = Sales::with('batch')->latest()->get();
+        return view('admin.sales.index', compact('sales'));
     }
 
-   public function create()
+    public function create()
     {
-        // hanya batch yang punya pupuk untuk dijual (berat_keluar_kg > 0 atau status selesai)
-        $batches = CompostBatch::where('berat_keluar_kg','>',0)->orWhere('status','selesai')->get();
+        $batches = CompostBatch::all();
         return view('admin.sales.create', compact('batches'));
     }
-    
-    public function store(Request $r)
+
+    public function store(Request $request)
     {
-        $r->validate([
-            'batch_id'=>'nullable|exists:compost_batches,id',
-            'pembeli'=>'required|string',
-            'jumlah_kg'=>'required|numeric|min:0.01',
-            'harga_per_kg'=>'required|numeric|min:0',
-            'tanggal'=>'required|date',
+        $request->validate([
+            'batch_id' => 'required|exists:compost_batches,id',
+            'pembeli' => 'required',
+            'jumlah_kg' => 'required|numeric',
+            'harga_per_kg' => 'required|numeric',
         ]);
-        $total = $r->jumlah_kg * $r->harga_per_kg;
-        $sale = Sales::create([
-            'batch_id'=>$r->batch_id,
-            'pembeli'=>$r->pembeli,
-            'jumlah_kg'=>$r->jumlah_kg,
-            'harga_per_kg'=>$r->harga_per_kg,
-            'total'=>$total,
-            'tanggal'=>$r->tanggal,
+
+        $total = $request->jumlah_kg * $request->harga_per_kg;
+
+        Sales::create([
+            'batch_id' => $request->batch_id,
+            'pembeli' => $request->pembeli,
+            'jumlah_kg' => $request->jumlah_kg,
+            'harga_per_kg' => $request->harga_per_kg,
+            'total' => $total,
+            'tanggal' => now(),
         ]);
-        // ledger: catat income
-        \App\Models\Ledger::create([
-            'kategori'=>'Penjualan Pupuk',
-            'type'=>'income',
-            'amount'=>$total,
-            'tanggal'=>$r->tanggal,
-            'ref_id'=>$sale->id,
-            'ref_type'=>Sales::class,
-        ]);
-        return redirect()->route('admin.sales.index')->with('success','Penjualan dicatat.');
+
+        return redirect()->route('admin.sales.index')
+            ->with('success', 'Penjualan berhasil dicatat.');
     }
 }

@@ -1,79 +1,50 @@
 @extends('layouts.admin')
 
 @section('content')
-<h2 class="text-2xl font-bold mb-4">Edit Batch Kompos</h2>
+<h1 class="text-2xl font-bold mb-4">Edit Batch</h1>
 
-<form action="{{ route('admin.batches.update', $batch->id) }}" method="POST">
+<form action="{{ route('admin.batches.update', $batch->id) }}" method="POST" class="space-y-4">
     @csrf
     @method('PUT')
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <div>
-            <label>Kode Batch</label>
-            <input type="text" name="kode_batch"
-                   value="{{ $batch->kode_batch }}"
-                   class="w-full border p-2" required>
-        </div>
-
-        {{-- <div>
-            <label>Pilih Pickup</label>
-            <select name="pickup_id" class="w-full border p-2" required>
-                @foreach($pickups as $p)
-                    <option value="{{ $p->id }}"
-                        @if($batch->pickup_id == $p->id) selected @endif>
-                        {{ $p->lokasi }} — {{ $p->berat }} kg ({{ $p->tanggal }})
-                    </option>
-                @endforeach
-            </select>
-        </div> --}}
-
-        <div>
-            <label>Berat Masuk (kg)</label>
-            <input type="number" step="0.01" name="berat_masuk_kg"
-                   value="{{ $batch->berat_masuk_kg }}"
-                   class="w-full border p-2" required>
-        </div>
-
-        <div>
-            <label>Berat Keluar (kg)</label>
-            <input type="number" step="0.01" name="berat_keluar_kg"
-                   value="{{ $batch->berat_keluar_kg }}"
-                   class="w-full border p-2">
-        </div>
-
-        <div>
-            <label>Tanggal Mulai</label>
-            <input type="date" name="tgl_mulai"
-                   value="{{ $batch->tgl_mulai }}"
-                   class="w-full border p-2" required>
-        </div>
-
-        <div>
-            <label>Tanggal Selesai</label>
-            <input type="date" name="tgl_selesai"
-                   value="{{ $batch->tgl_selesai }}"
-                   class="w-full border p-2">
-        </div>
-
-        <div>
-            <label>Status</label>
-            <select name="status" class="w-full border p-2">
-                <option value="proses"  @if($batch->status == 'proses') selected @endif>Proses</option>
-                <option value="selesai" @if($batch->status == 'selesai') selected @endif>Selesai</option>
-            </select>
-        </div>
-
+    <div>
+        <label class="font-semibold">Kode Batch</label>
+        <input type="text" name="kode_batch" class="border rounded w-full p-2"
+               value="{{ $batch->kode_batch }}" required>
     </div>
 
-    <div class="mt-4">
-        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-            Update
-        </button>
-
-        <a href="{{ route('admin.batches.index') }}"
-           class="ml-2 text-gray-600 hover:underline">Batal</a>
+    <div>
+        <label class="font-semibold">Pickup</label>
+        <select name="pickup_id" class="border rounded w-full p-2" required>
+            @foreach($pickups as $p)
+                <option value="{{ $p->id }}" {{ $batch->pickup_id == $p->id ? 'selected' : '' }}>
+                    {{ $p->lokasi }} - {{ $p->tanggal }}
+                </option>
+            @endforeach
+        </select>
     </div>
 
+    <div>
+        <label class="font-semibold">Berat Masuk (kg)</label>
+        <input type="number" name="berat_masuk" step="0.1"
+               value="{{ $batch->berat_masuk }}"
+               class="border rounded w-full p-2" required>
+    </div>
+
+    <div>
+        <label class="font-semibold">Tanggal Mulai</label>
+        <input type="date" name="tanggal_mulai"
+               value="{{ $batch->tanggal_mulai }}"
+               class="border rounded w-full p-2" required>
+    </div>
+
+    <div>
+        <label class="font-semibold">Tanggal Selesai</label>
+        <input type="date" name="tanggal_selesai"
+               value="{{ $batch->tanggal_selesai }}"
+               class="border rounded w-full p-2">
+    </div>
+
+    <button class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
 </form>
 @endsection

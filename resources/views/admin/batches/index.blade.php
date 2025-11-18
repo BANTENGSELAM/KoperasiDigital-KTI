@@ -1,61 +1,46 @@
-<x-admin-layout>
+@extends('layouts.admin')
 
-    <h1 class="text-xl font-bold mb-4">Daftar Batch Kompos</h1>
+@section('content')
+<h1 class="text-2xl font-bold mb-4">Batch Kompos</h1>
 
-    <a href="{{ route('admin.batches.create') }}"
-       class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-4 inline-block">
-        + Batch Baru
-    </a>
+<a href="{{ route('admin.batches.create') }}"
+   class="bg-green-600 text-white px-4 py-2 rounded">+ Batch Baru</a>
 
-    <table class="w-full border text-sm">
-        <thead class="bg-gray-100">
-            <tr>
-                <th class="border p-2">Kode</th>
-                {{-- <th class="border p-2">Pickup</th> --}}
-                <th class="border p-2">Berat Masuk</th>
-                <th class="border p-2">Berat Keluar</th>
-                <th class="border p-2">Tanggal Mulai</th>
-                <th class="border p-2">Status</th>
-                <th class="border p-2">Aksi</th>
-            </tr>
-        </thead>
+<table class="min-w-full mt-4 border text-sm text-gray-700">
+    <thead class="bg-gray-100">
+        <tr>
+            <th class="border p-2">Kode Batch</th>
+            <th class="border p-2">Pickup</th>
+            <th class="border p-2">Berat Masuk</th>
+            <th class="border p-2">Tanggal</th>
+            <th class="border p-2">Aksi</th>
+        </tr>
+    </thead>
 
-        <tbody>
-            @forelse($batches as $b)
-                <tr>
-                    <td class="border p-2">{{ $b->kode_batch }}</td>
-                    {{-- <td class="border p-2">
-                        @if ($b->pickup)
-                            Pickup #{{ $b->pickup->id }} — {{ $b->pickup->lokasi }}
-                        @else
-                            <span class="text-gray-500 italic">Tidak ada</span>
-                        @endif
-                    </td> --}}
-                    <td class="border p-2">{{ $b->berat_masuk_kg }} kg</td>
-                    <td class="border p-2">{{ $b->berat_keluar_kg }} kg</td>
-                    <td class="border p-2">{{ $b->tgl_mulai }}</td>
-                    <td class="border p-2">{{ ucfirst($b->status) }}</td>
+    <tbody>
+        @foreach($batches as $batch)
+        <tr>
+            <td class="border p-2">{{ $batch->kode_batch }}</td>
+            <td class="border p-2">
+                {{ $batch->pickup->lokasi ?? '-' }}
+            </td>
+            <td class="border p-2">{{ $batch->berat_masuk }} kg</td>
+            <td class="border p-2">{{ $batch->tanggal_mulai }}</td>
+            <td class="border p-2">
+                <a href="{{ route('admin.batches.edit', $batch->id) }}" class="text-blue-600">Edit</a>
 
-                    <td class="border p-2 flex gap-2">
-                        <a href="{{ route('admin.batches.edit', $b->id) }}"
-                           class="px-3 py-1 bg-blue-500 text-white rounded">Edit</a>
+                <form method="POST"
+                      action="{{ route('admin.batches.destroy', $batch->id) }}"
+                      class="inline">
+                    @csrf
+                    @method('DELETE')
 
-                        <form action="{{ route('admin.batches.destroy', $b->id) }}" method="POST"
-                              onsubmit="return confirm('Hapus batch ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="px-3 py-1 bg-red-600 text-white rounded">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6" class="border p-2 text-center text-gray-500">
-                        Belum ada data batch.
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-</x-admin-layout>
+                    <button class="text-red-600"
+                            onclick="return confirm('Yakin hapus?')">Hapus</button>
+                </form>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+@endsection
