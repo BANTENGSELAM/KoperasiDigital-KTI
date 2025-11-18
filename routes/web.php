@@ -7,14 +7,15 @@ use App\Http\Controllers\PickupController;
 use App\Http\Controllers\Admin\SHUController;
 use App\Http\Controllers\Admin\SalesController;
 use App\Http\Controllers\Admin\AnggotaController;
-use App\Http\Controllers\EducationalPostController;
 
 // Petugas & Member
-use App\Http\Controllers\MemberDashboardController;
+use App\Http\Controllers\EducationalPostController;
+use App\Http\Controllers\Admin\AdminSalesController;
 use App\Http\Controllers\Admin\CompostBatchController;
-use App\Http\Controllers\Admin\AdminDashboardController;
 
 // Edukasi publik & edukator
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Member\MemberDashboardController;
 use App\Http\Controllers\Petugas\PetugasDashboardController;
 
 

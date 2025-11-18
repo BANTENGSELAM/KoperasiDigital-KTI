@@ -3,8 +3,12 @@
 <h1 class="text-2xl font-semibold mb-4">Pembagian SHU</h1>
 
 <div class="mb-4">
-    <a href="{{ route('admin.shu.calculate') }}"
-       class="bg-green-600 text-white px-4 py-2 rounded">Hitung SHU Baru</a>
+   <form action="{{ route('admin.shu.calculate') }}" method="POST" class="inline">
+    @csrf
+    <button class="bg-green-600 text-white px-4 py-2 rounded">
+        Hitung Ulang SHU
+    </button>
+</form>
 
     <a href="{{ route('admin.shu.pdf') }}"
        class="bg-blue-600 text-white px-4 py-2 rounded ml-2">Unduh PDF</a>
