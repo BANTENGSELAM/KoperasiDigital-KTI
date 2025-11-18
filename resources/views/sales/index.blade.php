@@ -1,42 +1,33 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Daftar Penjualan Pupuk') }}
-        </h2>
-    </x-slot>
+<x-admin-layout title="Penjualan Pupuk">
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <a href="{{ route('admin.sales.create') }}" class="btn btn-primary mb-4">+ Catat Penjualan</a>
+<h1 class="text-2xl font-semibold mb-4">Penjualan Pupuk</h1>
 
-            <div class="bg-white shadow sm:rounded-lg p-6">
-                <table class="table table-bordered w-full">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Kode Batch</th>
-                            <th>Pembeli</th>
-                            <th>Jumlah (kg)</th>
-                            <th>Total (Rp)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($sales as $s)
-                            <tr>
-                                <td>{{ $s->tanggal }}</td>
-                                <td>{{ optional($s->batch)->kode_batch ?? 'Batch tidak ditemukan' }}</td>
-                                <td>{{ $s->pembeli }}</td>
-                                <td>{{ $s->jumlah_kg }}</td>
-                                <td>{{ number_format($s->total, 0, ',', '.') }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-gray-500">Belum ada penjualan.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</x-app-layout>
+<a href="{{ route('admin.sales.create') }}"
+   class="bg-green-600 text-white px-4 py-2 rounded">+ Catat Penjualan</a>
+
+<div class="bg-white mt-4 p-4 rounded shadow">
+<table class="min-w-full border">
+    <thead class="bg-gray-100">
+        <tr>
+            <th class="border p-2">Tanggal</th>
+            <th class="border p-2">Batch</th>
+            <th class="border p-2">Pembeli</th>
+            <th class="border p-2">Jumlah (kg)</th>
+            <th class="border p-2">Total (Rp)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($sales as $s)
+        <tr>
+            <td class="border p-2">{{ $s->tanggal }}</td>
+            <td class="border p-2">{{ $s->batch->kode_batch ?? '-' }}</td>
+            <td class="border p-2">{{ $s->pembeli }}</td>
+            <td class="border p-2">{{ $s->jumlah_kg }}</td>
+            <td class="border p-2">Rp {{ number_format($s->total,0,',','.') }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+</div>
+
+</x-admin-layout>

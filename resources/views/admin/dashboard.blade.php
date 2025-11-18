@@ -1,20 +1,29 @@
-@extends('layouts.admin')
+<x-admin-layout title="Dashboard Admin">
 
-@section('content')
-<h1>Catat Penjualan</h1>
+<h1 class="text-2xl font-bold mb-4">Dashboard Admin</h1>
 
-<form action="{{ route('admin.sales.store') }}" method="POST">
-    @csrf
-    <label>Batch</label>
-    <select name="batch_id">
-        <option value="">-- pilih batch (yang ada pupuk) --</option>
-        @foreach($batches as $b)
-            <option value="{{ $b->id }}">{{ $b->kode_batch }} — {{ $b->berat_keluar_kg ?? 0 }} kg</option>
-        @endforeach
-    </select>
-    <label>Pembeli</label><input name="pembeli" required>
-    <label>Jumlah (kg)</label><input type="number" name="jumlah_kg" step="0.01" required>
-    <label>Harga per kg</label><input type="number" name="harga_per_kg" step="0.01" required>
-    <button>Simpan</button>
-</form>
-@endsection
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+
+    <div class="p-4 bg-white shadow rounded">
+        <div>Total Sampah Masuk</div>
+        <div class="text-3xl font-bold text-green-700">{{ number_format($totalSampah,2) }} kg</div>
+    </div>
+
+    <div class="p-4 bg-white shadow rounded">
+        <div>Total Penjualan</div>
+        <div class="text-3xl font-bold text-blue-600">Rp {{ number_format($totalPenjualan,0,',','.') }}</div>
+    </div>
+
+    <div class="p-4 bg-white shadow rounded">
+        <div>Total SHU Dibagikan</div>
+        <div class="text-3xl font-bold text-yellow-600">Rp {{ number_format($totalSHU,0,',','.') }}</div>
+    </div>
+
+</div>
+
+<div class="bg-white p-4 rounded shadow">
+    <h3 class="font-semibold mb-2">Total Anggota UMKM</h3>
+    <div class="text-xl">{{ $totalAnggota }}</div>
+</div>
+
+</x-admin-layout>

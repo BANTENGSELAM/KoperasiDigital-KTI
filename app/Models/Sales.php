@@ -2,17 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Sales extends Model
 {
+    use HasFactory;
+
+    protected $table = 'sales';
+
     protected $fillable = [
         'batch_id',
         'pembeli',
         'jumlah_kg',
         'harga_per_kg',
         'total',
-        'tanggal',
+        'tanggal'
     ];
 
     public function batch()

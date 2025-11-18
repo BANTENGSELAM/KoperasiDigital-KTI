@@ -1,42 +1,39 @@
-@extends('layouts.admin')
+<x-admin-layout title="SHU">
 
-@section('content')
-<h1 class="text-2xl font-bold mb-6">Distribusi SHU</h1>
+<h1 class="text-2xl font-semibold mb-4">Pembagian SHU</h1>
 
-<div class="flex gap-3 mb-6">
-
+<div class="mb-4">
     <a href="{{ route('admin.shu.calculate') }}"
-       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-        Hitung Ulang SHU
-    </a>
+       class="bg-green-600 text-white px-4 py-2 rounded">Hitung SHU Baru</a>
 
     <a href="{{ route('admin.shu.pdf') }}"
-       class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
-        Unduh PDF
-    </a>
-
+       class="bg-blue-600 text-white px-4 py-2 rounded ml-2">Unduh PDF</a>
 </div>
 
-<div class="bg-white shadow rounded p-6">
+<div class="bg-white p-4 rounded shadow">
+
+    <h3 class="font-bold mb-4">Hasil Perhitungan</h3>
+
     <table class="min-w-full border text-sm">
         <thead class="bg-gray-100">
             <tr>
-                <th class="border p-2">Nama Anggota</th>
+                <th class="border p-2">Anggota</th>
                 <th class="border p-2">Kontribusi Sampah (kg)</th>
-                <th class="border p-2">SHU Diterima</th>
+                <th class="border p-2">Jumlah SHU (Rp)</th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach ($distributions as $item)
-                <tr>
-                    <td class="border p-2">{{ $item->user->name }}</td>
-                    <td class="border p-2">{{ $item->kontribusi }}</td>
-                    <td class="border p-2">Rp {{ number_format($item->jumlah_diterima, 0) }}</td>
-                </tr>
+            @foreach($distributions as $d)
+            <tr>
+                <td class="border p-2">{{ $d->user->name }}</td>
+                <td class="border p-2">{{ $d->kontribusi }}</td>
+                <td class="border p-2">Rp {{ number_format($d->jumlah_diterima,0,',','.') }}</td>
+            </tr>
             @endforeach
         </tbody>
-
     </table>
+
 </div>
-@endsection
+
+</x-admin-layout>

@@ -9,16 +9,26 @@ class CompostBatch extends Model
 {
     use HasFactory;
 
+    protected $table = 'compost_batches';
+
     protected $fillable = [
         'kode_batch',
-        // 'pickup_id',
+        'pickup_id',
         'berat_masuk_kg',
         'berat_keluar_kg',
         'tgl_mulai',
         'tgl_selesai',
         'status',
+        'keterangan'
     ];
 
-    public function pickup() { return $this->belongsTo(Pickup::class); }
-    public function sales() { return $this->hasMany(Sales::class, 'batch_id'); }
+    public function pickup()
+    {
+        return $this->belongsTo(Pickup::class, 'pickup_id');
+    }
+
+    public function sales()
+    {
+        return $this->hasMany(Sales::class, 'batch_id');
+    }
 }

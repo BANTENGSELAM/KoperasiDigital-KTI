@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +9,15 @@ class Ledger extends Model
 {
     use HasFactory;
 
+    protected $table = 'ledgers';
+
     protected $fillable = [
-        'kategori', 'type', 'amount', 'tanggal', 'ref_id', 'ref_type', 'catatan'
+        'kategori',
+        'type', // income | expense
+        'amount',
+        'tanggal',
+        'ref_id',
+        'ref_type',
+        'catatan'
     ];
 }

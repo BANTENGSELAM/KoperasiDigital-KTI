@@ -1,31 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Petugas;
 
+use App\Http\Controllers\Controller;
 use App\Models\Pickup;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PetugasDashboardController extends Controller
 {
     public function index()
     {
-        $totalPickup = Pickup::count();
-        $pickupPending = Pickup::where('status', 'pending')->count();
-        $pickupSelesai = Pickup::where('status', 'selesai')->count();
+        $petugasId = Auth::id();
 
-        return view('petugas.dashboard', compact(
-            'totalPickup',
-            'pickupPending',
-            'pickupSelesai'
-        ));
-    }
-    public function uploadPhoto(Request $r, $pickupId)
-    {
-        $r->validate(['photo'=>'required|image|max:2048']);
-        $pickup = Pickup::findOrFail($pickupId);
-        $path = $r->file('photo')->store('pickup_photos','public');
-        // simpan di kolom photo atau create relation PickupPhoto
-        $pickup->update(['photo'=>$path,'status'=>'selesai']);
-        return back()->with('success','Foto bukti diunggah, status pickup diset selesai.');
+        $tugasHariIni = Pickup::where('petugas_id',$petugasId)
+            ->where('status','dijadwalkan')
+            ->where('tanggal', today())
+            ->get();
+
+        return view('petugas.dashboard', compact('tugasHariIni'));
     }
 }

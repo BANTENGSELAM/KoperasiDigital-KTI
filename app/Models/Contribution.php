@@ -2,14 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Contribution extends Model
 {
+    use HasFactory;
+
+    protected $table = 'contributions';
+
     protected $fillable = [
         'user_id',
         'berat_sampah',
-        'tanggal',
+        'tanggal'
     ];
 
     public function user()

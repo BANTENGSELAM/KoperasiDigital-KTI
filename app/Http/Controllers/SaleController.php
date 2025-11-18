@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Sales; // model kamu bernama Sales
+use App\Http\Controllers\Controller;
+use App\Models\Sales;
 use App\Models\CompostBatch;
+use App\Models\Ledger;
 use Illuminate\Http\Request;
 
-class SaleController extends Controller
+class SalesController extends Controller
 {
     public function index()
     {
@@ -16,31 +18,33 @@ class SaleController extends Controller
 
     public function create()
     {
-        $batches = CompostBatch::all();
+        $batches = CompostBatch::where('status', 'selesai')->get();
         return view('admin.sales.create', compact('batches'));
     }
 
-    public function store(Request $request)
+    public function store(Request $r)
     {
-        $request->validate([
-            'batch_id' => 'required|exists:compost_batches,id',
+        $data = $r->validate([
+            'batch_id' => 'nullable|exists:compost_batches,id',
             'pembeli' => 'required',
-            'jumlah_kg' => 'required|numeric',
-            'harga_per_kg' => 'required|numeric',
+            'jumlah_kg' => 'required|numeric|min:0.1',
+            'harga_per_kg' => 'required|numeric|min:0',
+            'tanggal' => 'required|date'
         ]);
 
-        $total = $request->jumlah_kg * $request->harga_per_kg;
+        $data['total'] = $data['jumlah_kg'] * $data['harga_per_kg'];
 
-        Sales::create([
-            'batch_id' => $request->batch_id,
-            'pembeli' => $request->pembeli,
-            'jumlah_kg' => $request->jumlah_kg,
-            'harga_per_kg' => $request->harga_per_kg,
-            'total' => $total,
-            'tanggal' => now(),
+        $sale = Sales::create($data);
+
+        Ledger::create([
+            'kategori' => 'Penjualan Pupuk',
+            'type' => 'income',
+            'amount' => $sale->total,
+            'tanggal' => $sale->tanggal,
+            'ref_id' => $sale->id,
+            'ref_type' => Sales::class
         ]);
 
-        return redirect()->route('admin.sales.index')
-            ->with('success', 'Penjualan berhasil dicatat.');
+        return redirect()->route('admin.sales.index')->with('success', 'Penjualan dicatat!');
     }
 }
