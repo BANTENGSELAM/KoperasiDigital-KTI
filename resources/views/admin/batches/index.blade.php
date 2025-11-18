@@ -24,7 +24,7 @@
                 <td class="border p-2">{{ $b->berat_masuk_kg }} kg</td>
                 <td class="border p-2">{{ $b->status }}</td>
                 <td class="border p-2">
-                    <a href="{{ route('admin.batches.edit',$b) }}" class="text-blue-600">Edit</a>
+                    <a href="{{ route('admin.batches.edit', $b->id) }}" class="text-blue-600">Edit</a>
                 </td>
             </tr>
             @endforeach

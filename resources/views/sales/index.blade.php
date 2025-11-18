@@ -1,4 +1,4 @@
-<x-admin-layout title="Penjualan Pupuk">
+<x-admin-layout>
 
 <h1 class="text-2xl font-semibold mb-4">Penjualan Pupuk</h1>
 
