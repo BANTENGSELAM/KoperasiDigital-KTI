@@ -1,45 +1,36 @@
-<x-admin-layout title="Buat Batch Baru">
+<x-admin-layout title="Buat Batch">
 
-<h1 class="text-2xl font-semibold mb-4">Buat Batch Baru</h1>
+<h1 class="text-xl font-bold mb-4">Buat Batch Kompos</h1>
 
-<form action="{{ route('admin.batches.store') }}"
-      method="POST"
-      class="bg-white p-6 rounded shadow">
+<form action="{{ route('admin.batches.store') }}" method="POST" class="space-y-4">
     @csrf
 
-    <label>Kode Batch</label>
-    <input name="kode_batch" class="border p-2 w-full mb-3">
+    <div>
+        <label>Kode Batch</label>
+        <input name="kode_batch" class="w-full border p-2" required>
+    </div>
 
-    <label>Pilih Pickup</label>
-    <select name="pickup_id" class="border p-2 w-full mb-3">
-        @foreach($pickups as $p)
-            <option value="{{ $p->id }}">
-                {{ $p->tanggal }} — {{ $p->berat_kg }} kg
-            </option>
-        @endforeach
-    </select>
+    <div>
+        <label>Pilih Pickup</label>
+        <select name="pickup_id" class="w-full border p-2" required>
+            <option value="">-- Pilih Pickup --</option>
+            @foreach($pickups as $p)
+                <option value="{{ $p->id }}">
+                    {{ $p->tanggal }} — {{ $p->berat_kg }} kg
+                </option>
+            @endforeach
+        </select>
+    </div>
 
-    <label>Berat Masuk (kg)</label>
-    <input name="berat_masuk_kg" class="border p-2 w-full mb-3" type="number" step="0.01">
+    <div>
+        <label>Berat Masuk (kg)</label>
+        <input name="berat_masuk_kg" type="number" step="0.01" class="w-full border p-2" required>
+    </div>
 
-    <label>Berat Keluar (kg)</label>
-    <input name="berat_keluar_kg" class="border p-2 w-full mb-3" type="number" step="0.01">
-
-    <label>Tanggal Mulai</label>
-    <input name="tgl_mulai" type="date" class="border p-2 w-full mb-3">
-
-    <label>Tanggal Selesai</label>
-    <input name="tgl_selesai" type="date" class="border p-2 w-full mb-3">
-
-    <label>Status</label>
-    <select name="status" class="border p-2 w-full mb-3">
-        <option value="proses">Proses</option>
-        <option value="selesai">Selesai</option>
-        <option value="dibatalkan">Dibatalkan</option>
-    </select>
-
-    <label>Keterangan</label>
-    <textarea name="keterangan" class="border p-2 w-full mb-3"></textarea>
+    <div>
+        <label>Tanggal Mulai</label>
+        <input type="date" name="tgl_mulai" class="w-full border p-2" required>
+    </div>
 
     <button class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
 </form>

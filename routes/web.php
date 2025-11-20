@@ -38,24 +38,23 @@ require __DIR__.'/auth.php';
 // ======================================================
 // ADMIN ROUTES
 // ======================================================
-Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group(function() {
+Route::middleware(['auth','role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    Route::get('/dashboard', [AdminDashboardController::class,'index'])
-        ->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Anggota
     Route::resource('anggota', AnggotaController::class);
 
-    // Batch kompos
     Route::resource('batches', CompostBatchController::class);
 
-    // Penjualan
     Route::resource('sales', SalesController::class);
 
-    // SHU
-    Route::get('/shu', [SHUController::class,'index'])->name('shu.index');
-    Route::post('/shu/calculate', [SHUController::class,'calculate'])->name('shu.calculate');
-    Route::get('/shu/pdf', [SHUController::class,'exportPdf'])->name('shu.pdf');
+    Route::get('/shu', [SHUController::class, 'index'])->name('shu.index');
+    Route::post('/shu/calculate', [SHUController::class, 'calculate'])->name('shu.calculate');
+    Route::get('/shu/pdf', [SHUController::class, 'exportPdf'])->name('shu.pdf');
+
 });
 
 

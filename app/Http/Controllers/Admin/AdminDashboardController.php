@@ -14,13 +14,17 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $totalSampah = Pickup::sum('berat_kg');
-        $totalPupuk = CompostBatch::sum('berat_keluar_kg');
+        $totalPupuk  = CompostBatch::sum('berat_keluar_kg');
         $totalPenjualan = Sales::sum('total');
         $totalSHU = Distribution::sum('jumlah_diterima');
         $totalAnggota = User::role('restoran_umkm')->count();
 
         return view('admin.dashboard', compact(
-            'totalSampah', 'totalPupuk', 'totalPenjualan', 'totalSHU', 'totalAnggota'
+            'totalSampah',
+            'totalPupuk',
+            'totalPenjualan',
+            'totalSHU',
+            'totalAnggota'
         ));
     }
 }

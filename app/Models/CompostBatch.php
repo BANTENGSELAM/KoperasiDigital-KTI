@@ -2,15 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CompostBatch extends Model
 {
-    use HasFactory;
-
-    protected $table = 'compost_batches';
-
     protected $fillable = [
         'kode_batch',
         'pickup_id',
@@ -24,11 +19,6 @@ class CompostBatch extends Model
 
     public function pickup()
     {
-        return $this->belongsTo(Pickup::class, 'pickup_id');
-    }
-
-    public function sales()
-    {
-        return $this->hasMany(Sales::class, 'batch_id');
+        return $this->belongsTo(Pickup::class);
     }
 }

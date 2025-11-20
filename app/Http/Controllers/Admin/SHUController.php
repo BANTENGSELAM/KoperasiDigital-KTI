@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Sales;
-use App\Models\Distribution;
 use App\Models\Contribution;
-use App\Models\Ledger;
+use App\Models\Distribution;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class SHUController extends Controller
 {
@@ -14,44 +15,45 @@ class SHUController extends Controller
     {
         $distributions = Distribution::with('user')->get();
         $totalPendapatan = Sales::sum('total');
-        $totalPengeluaran = Ledger::where('type', 'expense')->sum('amount');
-        $labaBersih = $totalPendapatan - $totalPengeluaran;
+        $totalKontribusiSemua = Contribution::sum('berat_sampah');
 
         return view('admin.shu.index', compact(
-            'distributions','totalPendapatan','totalPengeluaran','labaBersih'
+            'distributions',
+            'totalPendapatan',
+            'totalKontribusiSemua'
         ));
     }
 
     public function calculate()
     {
         $totalPendapatan = Sales::sum('total');
-        $totalPengeluaran = Ledger::where('type', 'expense')->sum('amount');
-        $labaBersih = $totalPendapatan - $totalPengeluaran;
-
-        if ($labaBersih <= 0) {
-            return back()->with('error', 'Tidak ada laba untuk dibagikan.');
+        if ($totalPendapatan <= 0) {
+            return back()->with('error', 'Tidak ada pendapatan untuk dibagikan.');
         }
 
-        $kontribusi = Contribution::selectRaw("user_id, SUM(berat_sampah) AS total_berat")
+        $kontribusi = Contribution::selectRaw('user_id, SUM(berat_sampah) as total_berat')
             ->groupBy('user_id')
             ->get();
 
         $totalBerat = $kontribusi->sum('total_berat');
 
-        Distribution::truncate();
+        DB::transaction(function() use ($kontribusi, $totalPendapatan, $totalBerat){
+            Distribution::truncate();
 
-        foreach ($kontribusi as $c) {
-            $persen = $totalBerat > 0 ? ($c->total_berat / $totalBerat) : 0;
-            $jumlah = $labaBersih * $persen;
+            foreach ($kontribusi as $row) {
+                $share = $totalBerat ? ($row->total_berat / $totalBerat) : 0;
+                $amount = $totalPendapatan * $share;
 
-            Distribution::create([
-                'user_id' => $c->user_id,
-                'kontribusi' => $c->total_berat,
-                'jumlah_diterima' => round($jumlah,2)
-            ]);
-        }
+                Distribution::create([
+                    'user_id' => $row->user_id,
+                    'kontribusi' => $row->total_berat,
+                    'jumlah_diterima' => $amount,
+                ]);
+            }
+        });
 
-        return back()->with('success', 'SHU berhasil dihitung!');
+        return redirect()->route('admin.shu.index')
+            ->with('success', 'SHU berhasil dihitung.');
     }
 
     public function exportPdf()

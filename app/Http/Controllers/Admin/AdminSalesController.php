@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Sale;
+use App\Http\Controllers\Controller;
 use App\Models\Sales;
 use App\Models\CompostBatch;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class SalesController extends Controller
 {
@@ -24,22 +23,19 @@ class SalesController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'batch_id' => 'required|exists:compost_batches,id',
-            'pembeli' => 'required',
-            'jumlah_kg' => 'required|numeric',
-            'harga_per_kg' => 'required|numeric',
+        $data = $request->validate([
+            'batch_id' => 'nullable|exists:compost_batches,id',
+            'pembeli' => 'required|string',
+            'jumlah_kg' => 'required|numeric|min:0.1',
+            'harga_per_kg' => 'required|numeric|min:0',
+            'tanggal' => 'required|date',
         ]);
 
-        Sales::create([
-            'batch_id' => $request->batch_id,
-            'pembeli' => $request->pembeli,
-            'jumlah_kg' => $request->jumlah_kg,
-            'harga_per_kg' => $request->harga_per_kg,
-            'total' => $request->jumlah_kg * $request->harga_per_kg,
-        ]);
+        $data['total'] = $data['jumlah_kg'] * $data['harga_per_kg'];
+
+        Sales::create($data);
 
         return redirect()->route('admin.sales.index')
-            ->with('success', 'Penjualan berhasil dicatat.');
+            ->with('success', 'Data penjualan berhasil dicatat.');
     }
 }

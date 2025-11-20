@@ -1,43 +1,33 @@
 <x-admin-layout title="SHU">
 
-<h1 class="text-2xl font-semibold mb-4">Pembagian SHU</h1>
+<h1 class="text-2xl font-bold mb-4">Perhitungan SHU</h1>
 
-<div class="mb-4">
-   <form action="{{ route('admin.shu.calculate') }}" method="POST" class="inline">
+<form action="{{ route('admin.shu.calculate') }}" method="POST">
     @csrf
-    <button class="bg-green-600 text-white px-4 py-2 rounded">
-        Hitung Ulang SHU
-    </button>
+    <button class="bg-green-600 text-white px-4 py-2 rounded">Hitung Ulang SHU</button>
 </form>
 
-    <a href="{{ route('admin.shu.pdf') }}"
-       class="bg-blue-600 text-white px-4 py-2 rounded ml-2">Unduh PDF</a>
-</div>
+<a href="{{ route('admin.shu.pdf') }}" 
+   class="bg-blue-600 text-white px-4 py-2 rounded inline-block mt-2">Unduh PDF</a>
 
-<div class="bg-white p-4 rounded shadow">
+<table class="w-full bg-white mt-6 border">
+    <thead class="bg-gray-100">
+        <tr>
+            <th class="p-2 border">Nama</th>
+            <th class="p-2 border">Kontribusi (kg)</th>
+            <th class="p-2 border">SHU Diterima</th>
+        </tr>
+    </thead>
 
-    <h3 class="font-bold mb-4">Hasil Perhitungan</h3>
-
-    <table class="min-w-full border text-sm">
-        <thead class="bg-gray-100">
-            <tr>
-                <th class="border p-2">Anggota</th>
-                <th class="border p-2">Kontribusi Sampah (kg)</th>
-                <th class="border p-2">Jumlah SHU (Rp)</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach($distributions as $d)
-            <tr>
-                <td class="border p-2">{{ $d->user->name }}</td>
-                <td class="border p-2">{{ $d->kontribusi }}</td>
-                <td class="border p-2">Rp {{ number_format($d->jumlah_diterima,0,',','.') }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-</div>
+    <tbody>
+        @foreach($distributions as $d)
+        <tr>
+            <td class="border p-2">{{ $d->user->name }}</td>
+            <td class="border p-2">{{ $d->kontribusi }}</td>
+            <td class="border p-2">Rp {{ number_format($d->jumlah_diterima, 0) }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
 
 </x-admin-layout>
