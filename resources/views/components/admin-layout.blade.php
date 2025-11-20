@@ -20,7 +20,16 @@
             <li><a href="{{ route('admin.batches.index') }}">Batch Kompos</a></li>
             <li><a href="{{ route('admin.sales.index') }}">Penjualan</a></li>
             <li><a href="{{ route('admin.shu.index') }}">SHU</a></li>
-            <li><a href="{{ route('logout') }}" class="text-red-300">Logout</a></li>
+            <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                    @csrf
+                </form>
+
+                <li>
+                    <a href="#" class="block py-2 text-red-300"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
+                </li>
         </ul>
     </aside>
 
