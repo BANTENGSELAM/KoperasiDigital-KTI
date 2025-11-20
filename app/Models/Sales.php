@@ -6,19 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sales extends Model
 {
-    protected $table = 'sales';
-
     protected $fillable = [
         'batch_id',
         'pembeli',
         'jumlah_kg',
         'harga_per_kg',
         'total',
-        'tanggal'
+        'tanggal',
     ];
 
     public function batch()
     {
-        return $this->belongsTo(CompostBatch::class);
+        return $this->belongsTo(CompostBatch::class, 'batch_id');
     }
 }

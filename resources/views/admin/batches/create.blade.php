@@ -1,38 +1,39 @@
-<x-admin-layout title="Buat Batch">
+@extends('layouts.admin')
 
-<h1 class="text-xl font-bold mb-4">Buat Batch Kompos</h1>
+@section('content')
+<h2 class="text-xl mb-4 font-semibold">Batch Kompos Baru</h2>
 
-<form action="{{ route('admin.batches.store') }}" method="POST" class="space-y-4">
+<form action="{{ route('admin.batches.store') }}" method="POST">
     @csrf
 
-    <div>
-        <label>Kode Batch</label>
-        <input name="kode_batch" class="w-full border p-2" required>
-    </div>
+    <label>Kode Batch</label>
+    <input type="text" name="kode_batch" class="border p-2 w-full mb-3">
 
-    <div>
-        <label>Pilih Pickup</label>
-        <select name="pickup_id" class="w-full border p-2" required>
-            <option value="">-- Pilih Pickup --</option>
-            @foreach($pickups as $p)
-                <option value="{{ $p->id }}">
-                    {{ $p->tanggal }} — {{ $p->berat_kg }} kg
-                </option>
-            @endforeach
-        </select>
-    </div>
+    <label>Pilih Pickup (opsional)</label>
+    <select name="pickup_id" class="border p-2 w-full mb-3">
+        <option value="">-- Tidak Pakai Pickup --</option>
+        @foreach($pickups as $p)
+            <option value="{{ $p->id }}">
+                {{ $p->lokasi }} ({{ $p->berat_kg }} kg)
+            </option>
+        @endforeach
+    </select>
 
-    <div>
-        <label>Berat Masuk (kg)</label>
-        <input name="berat_masuk_kg" type="number" step="0.01" class="w-full border p-2" required>
-    </div>
+    <label>Berat Masuk (kg)</label>
+    <input type="number" step="0.01" name="berat_masuk_kg" class="border p-2 w-full mb-3">
 
-    <div>
-        <label>Tanggal Mulai</label>
-        <input type="date" name="tgl_mulai" class="w-full border p-2" required>
-    </div>
+    <label>Berat Keluar (kg)</label>
+    <input type="number" step="0.01" name="berat_keluar_kg" class="border p-2 w-full mb-3">
 
-    <button class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+    <label>Tanggal Mulai</label>
+    <input type="date" name="tanggal_mulai" class="border p-2 w-full mb-3">
+
+    <label>Tanggal Selesai</label>
+    <input type="date" name="tanggal_selesai" class="border p-2 w-full mb-3">
+
+    <label>Catatan</label>
+    <textarea name="catatan" class="border p-2 w-full mb-3"></textarea>
+
+    <button class="bg-green-600 text-white px-4 py-2">Simpan</button>
 </form>
-
-</x-admin-layout>
+@endsection

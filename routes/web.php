@@ -5,15 +5,16 @@ use Illuminate\Support\Facades\Route;
 // Admin Controllers
 use App\Http\Controllers\PickupController;
 use App\Http\Controllers\Admin\SHUController;
+use App\Http\Controllers\UMKMPickupController;
 use App\Http\Controllers\Admin\SalesController;
-use App\Http\Controllers\Admin\AnggotaController;
 
 // Petugas & Member
+use App\Http\Controllers\Admin\AnggotaController;
 use App\Http\Controllers\EducationalPostController;
 use App\Http\Controllers\Admin\AdminSalesController;
-use App\Http\Controllers\Admin\CompostBatchController;
 
 // Edukasi publik & edukator
+use App\Http\Controllers\Admin\CompostBatchController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Member\MemberDashboardController;
 use App\Http\Controllers\Petugas\PetugasDashboardController;
@@ -61,20 +62,23 @@ Route::middleware(['auth','role:admin'])
 // ======================================================
 // PETUGAS ROUTES
 // ======================================================
-Route::middleware(['auth','role:petugas'])->prefix('petugas')->name('petugas.')->group(function() {
+Route::middleware(['auth', 'role:petugas'])
+    ->prefix('petugas')
+    ->name('petugas.')
+    ->group(function () {
 
-    Route::get('/dashboard', [PetugasDashboardController::class,'index'])
-        ->name('dashboard');
+        Route::get('dashboard', [PetugasDashboardController::class, 'index'])
+            ->name('dashboard');
 
-    Route::get('/pickups', [PickupController::class,'indexPetugas'])
-        ->name('pickups.index');
+        Route::get('pickups', [PetugasPickupController::class, 'index'])
+            ->name('pickups.index');
 
-    Route::patch('/pickups/{pickup}/status', [PickupController::class,'updateStatus'])
-        ->name('pickups.updateStatus');
+        Route::patch('pickups/{id}/status', [PetugasPickupController::class, 'updateStatus'])
+            ->name('pickups.updateStatus');
 
-    Route::post('/pickups/{pickup}/upload-foto', [PickupController::class,'uploadFoto'])
-        ->name('pickups.uploadFoto');
-});
+        Route::post('pickups/{id}/upload-bukti', [PetugasPickupController::class, 'uploadBukti'])
+            ->name('pickups.uploadBukti');
+    });
 
 
 // ======================================================
@@ -85,15 +89,8 @@ Route::middleware(['auth','role:restoran_umkm'])->prefix('member')->name('member
     Route::get('/dashboard', [MemberDashboardController::class,'index'])
         ->name('dashboard');
 
-    Route::get('/pickups', [PickupController::class,'indexMember'])
-        ->name('pickups.index');
-
-    Route::get('/pickups/create', [PickupController::class,'create'])
-        ->name('pickups.create');
-
-    Route::post('/pickups', [PickupController::class,'store'])
-        ->name('pickups.store');
-});
+     Route::resource('pickups', UMKMPickupController::class);
+    });
 
 
 // ======================================================

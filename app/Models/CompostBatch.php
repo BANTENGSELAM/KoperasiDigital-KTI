@@ -11,10 +11,9 @@ class CompostBatch extends Model
         'pickup_id',
         'berat_masuk_kg',
         'berat_keluar_kg',
-        'tgl_mulai',
-        'tgl_selesai',
-        'status',
-        'keterangan'
+        'tanggal_mulai',
+        'tanggal_selesai',
+        'catatan',
     ];
 
     public function pickup()

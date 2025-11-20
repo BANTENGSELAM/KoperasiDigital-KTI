@@ -7,10 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pickup extends Model
 {
-    use HasFactory;
-
-    protected $table = 'pickups';
-
     protected $fillable = [
         'user_id',
         'petugas_id',
@@ -20,7 +16,7 @@ class Pickup extends Model
         'lokasi',
         'status',
         'catatan',
-        'photo'
+        'bukti_foto',
     ];
 
     public function user()
@@ -31,10 +27,5 @@ class Pickup extends Model
     public function petugas()
     {
         return $this->belongsTo(User::class, 'petugas_id');
-    }
-
-    public function batch()
-    {
-        return $this->hasOne(CompostBatch::class, 'pickup_id');
     }
 }

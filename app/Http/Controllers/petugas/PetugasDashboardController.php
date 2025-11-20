@@ -13,9 +13,7 @@ class PetugasDashboardController extends Controller
         $petugasId = Auth::id();
 
         $tugasHariIni = Pickup::where('petugas_id',$petugasId)
-            ->where('status','dijadwalkan')
-            ->where('tanggal', today())
-            ->get();
+            ->where('tanggal', today())->get();
 
         return view('petugas.dashboard', compact('tugasHariIni'));
     }
