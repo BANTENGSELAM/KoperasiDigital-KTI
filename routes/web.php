@@ -3,19 +3,19 @@
 use Illuminate\Support\Facades\Route;
 
 // Admin Controllers
-use App\Http\Controllers\PickupController;
 use App\Http\Controllers\Admin\SHUController;
 use App\Http\Controllers\UMKMPickupController;
 use App\Http\Controllers\Admin\SalesController;
+use App\Http\Controllers\Admin\AnggotaController;
 
 // Petugas & Member
-use App\Http\Controllers\Admin\AnggotaController;
 use App\Http\Controllers\EducationalPostController;
 use App\Http\Controllers\Admin\AdminSalesController;
+use App\Http\Controllers\Admin\CompostBatchController;
 
 // Edukasi publik & edukator
-use App\Http\Controllers\Admin\CompostBatchController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Petugas\PetugasPickupController;
 use App\Http\Controllers\Member\MemberDashboardController;
 use App\Http\Controllers\Petugas\PetugasDashboardController;
 
@@ -67,30 +67,22 @@ Route::middleware(['auth', 'role:petugas'])
     ->name('petugas.')
     ->group(function () {
 
-        Route::get('dashboard', [PetugasDashboardController::class, 'index'])
-            ->name('dashboard');
-
-        Route::get('pickups', [PetugasPickupController::class, 'index'])
-            ->name('pickups.index');
-
-        Route::patch('pickups/{id}/status', [PetugasPickupController::class, 'updateStatus'])
-            ->name('pickups.updateStatus');
-
-        Route::post('pickups/{id}/upload-bukti', [PetugasPickupController::class, 'uploadBukti'])
-            ->name('pickups.uploadBukti');
+    Route::get('/dashboard', [\App\Http\Controllers\Petugas\PetugasDashboardController::class,'index'])->name('dashboard');
+    Route::get('/pickups', [PetugasPickupController::class,'index'])->name('pickups.index');
+    Route::patch('/pickups/{id}/status', [PetugasPickupController::class,'updateStatus'])->name('pickups.updateStatus');
+    Route::post('/pickups/{id}/uploadBukti', [PetugasPickupController::class,'uploadBukti'])->name('pickups.uploadBukti');
     });
 
 
 // ======================================================
 // MEMBER ROUTES (UMKM)
 // ======================================================
-Route::middleware(['auth','role:restoran_umkm'])->prefix('member')->name('member.')->group(function() {
-
-    Route::get('/dashboard', [MemberDashboardController::class,'index'])
-        ->name('dashboard');
-
-     Route::resource('pickups', UMKMPickupController::class);
-    });
+Route::middleware(['auth','role:restoran_umkm'])->prefix('member')->name('member.')->group(function(){
+    Route::get('/dashboard', [\App\Http\Controllers\Member\MemberDashboardController::class,'index'])->name('dashboard');
+    Route::get('/pickups', [UMKMPickupController::class,'index'])->name('pickups.index');
+    Route::get('/pickups/create', [UMKMPickupController::class,'create'])->name('pickups.create');
+    Route::post('/pickups', [UMKMPickupController::class,'store'])->name('pickups.store');
+});
 
 
 // ======================================================
