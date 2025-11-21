@@ -27,17 +27,76 @@ class UMKMPickupController extends Controller
         $data = $request->validate([
             'tanggal' => 'required|date',
             'lokasi' => 'required|string|max:255',
-            'berat_kg' => 'required|numeric|min:0.01',
-            'jenis' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
         ]);
 
         $data['user_id'] = Auth::id();
         $data['status'] = 'dijadwalkan';
+        // berat_kg akan diisi oleh petugas saat pickup selesai
 
         Pickup::create($data);
 
+        return redirect()->route('member.dashboard')
+            ->with('success', 'Jadwal pickup berhasil dibuat! Tunggu petugas mengambil tugas.');
+    }
+
+    // Form edit pickup (hanya jika masih dijadwalkan)
+    public function edit($id)
+    {
+        $pickup = Pickup::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+        
+        // Hanya bisa edit jika masih dijadwalkan
+        if ($pickup->status != 'dijadwalkan') {
+            return redirect()->route('member.pickups.index')
+                ->with('error', 'Pickup yang sudah diambil petugas tidak bisa diedit.');
+        }
+
+        return view('member.pickups.edit', compact('pickup'));
+    }
+
+    // Update pickup
+    public function update(Request $request, $id)
+    {
+        $pickup = Pickup::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+        
+        // Hanya bisa update jika masih dijadwalkan
+        if ($pickup->status != 'dijadwalkan') {
+            return redirect()->route('member.pickups.index')
+                ->with('error', 'Pickup yang sudah diambil petugas tidak bisa diubah.');
+        }
+
+        $data = $request->validate([
+            'tanggal' => 'required|date',
+            'lokasi' => 'required|string|max:255',
+            'catatan' => 'nullable|string',
+        ]);
+
+        $pickup->update($data);
+
         return redirect()->route('member.pickups.index')
-            ->with('success', 'Jadwal pengambilan berhasil dibuat.');
+            ->with('success', 'Pickup berhasil diperbarui.');
+    }
+
+    // Hapus/batalkan pickup
+    public function destroy($id)
+    {
+        $pickup = Pickup::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+        
+        // Hanya bisa hapus jika masih dijadwalkan
+        if ($pickup->status != 'dijadwalkan') {
+            return redirect()->route('member.pickups.index')
+                ->with('error', 'Pickup yang sudah diambil petugas tidak bisa dibatalkan.');
+        }
+
+        $pickup->delete();
+
+        return redirect()->route('member.pickups.index')
+            ->with('success', 'Pickup berhasil dibatalkan.');
     }
 }

@@ -59,6 +59,12 @@ Route::middleware(['auth','role:admin'])
 
     Route::resource('sales', SalesController::class);
 
+    // Pickup Management (NEW)
+    Route::get('/pickups', [\App\Http\Controllers\Admin\AdminPickupController::class, 'index'])->name('pickups.index');
+    Route::post('/pickups/{id}/assign', [\App\Http\Controllers\Admin\AdminPickupController::class, 'assignPetugas'])->name('pickups.assign');
+    Route::post('/pickups/{id}/confirm', [\App\Http\Controllers\Admin\AdminPickupController::class, 'confirmSelesai'])->name('pickups.confirm');
+    Route::post('/pickups/{id}/reject', [\App\Http\Controllers\Admin\AdminPickupController::class, 'reject'])->name('pickups.reject');
+    
     Route::get('/shu', [SHUController::class, 'index'])->name('shu.index');
     Route::post('/shu/calculate', [SHUController::class, 'calculate'])->name('shu.calculate');
     Route::get('/shu/pdf', [SHUController::class, 'exportPdf'])->name('shu.pdf');
@@ -75,6 +81,8 @@ Route::middleware(['auth', 'role:petugas'])
     ->group(function () {
 
     Route::get('/dashboard', [\App\Http\Controllers\Petugas\PetugasDashboardController::class,'index'])->name('dashboard');
+    
+    // Pickup Management
     Route::get('/pickups', [PetugasPickupController::class,'index'])->name('pickups.index');
     Route::patch('/pickups/{id}/status', [PetugasPickupController::class,'updateStatus'])->name('pickups.updateStatus');
     Route::post('/pickups/{id}/uploadBukti', [PetugasPickupController::class,'uploadBukti'])->name('pickups.uploadBukti');
@@ -86,9 +94,21 @@ Route::middleware(['auth', 'role:petugas'])
 // ======================================================
 Route::middleware(['auth','role:restoran_umkm'])->prefix('member')->name('member.')->group(function(){
     Route::get('/dashboard', [\App\Http\Controllers\Member\MemberDashboardController::class,'index'])->name('dashboard');
+    
+    // Pickup Management (CRUD)
     Route::get('/pickups', [UMKMPickupController::class,'index'])->name('pickups.index');
     Route::get('/pickups/create', [UMKMPickupController::class,'create'])->name('pickups.create');
     Route::post('/pickups', [UMKMPickupController::class,'store'])->name('pickups.store');
+    Route::get('/pickups/{id}/edit', [UMKMPickupController::class,'edit'])->name('pickups.edit');
+    Route::put('/pickups/{id}', [UMKMPickupController::class,'update'])->name('pickups.update');
+    Route::delete('/pickups/{id}', [UMKMPickupController::class,'destroy'])->name('pickups.destroy');
+    
+    // SHU
+    Route::get('/shu', [\App\Http\Controllers\Member\MemberSHUController::class, 'index'])->name('shu.index');
+    
+    // Profile
+    Route::get('/profile', [\App\Http\Controllers\Member\MemberProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [\App\Http\Controllers\Member\MemberProfileController::class, 'update'])->name('profile.update');
 });
 
 

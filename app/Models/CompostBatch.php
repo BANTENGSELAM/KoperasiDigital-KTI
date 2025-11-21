@@ -14,6 +14,7 @@ class CompostBatch extends Model
         'tanggal_mulai',
         'tanggal_selesai',
         'catatan',
+        'status',
     ];
 
     public function pickup()

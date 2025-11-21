@@ -52,19 +52,31 @@ class PetugasPickupController extends Controller
     {
         $request->validate([
             'foto' => 'required|image|max:4096',
+            'berat_kg' => 'required|numeric|min:0',
         ]);
 
         $p = Pickup::findOrFail($id);
 
+        // Upload foto
         $file = $request->file('foto');
-        $path = $file->store('pickup_bukti', 'public'); // storage/app/public/pickup_bukti
+        $path = $file->store('pickup_bukti', 'public');
 
-        // simpan path relatif
+        // Update pickup: foto, berat, status langsung SELESAI
         $p->bukti_foto = $path;
+        $p->berat_kg = $request->berat_kg;
+        $p->status = 'selesai'; // Langsung selesai, tidak perlu konfirmasi admin
+        
         // set petugas jika kosong
         if (!$p->petugas_id) $p->petugas_id = Auth::id();
         $p->save();
 
-        return back()->with('success', 'Bukti foto berhasil diunggah.');
+        // Langsung create Contribution untuk SHU
+        \App\Models\Contribution::create([
+            'user_id' => $p->user_id,
+            'berat_sampah' => $p->berat_kg,
+            'tanggal' => $p->tanggal,
+        ]);
+
+        return back()->with('success', 'Pickup selesai! Foto & berat tersimpan, contribution tercatat untuk SHU.');
     }
 }

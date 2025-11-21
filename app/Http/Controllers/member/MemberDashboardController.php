@@ -14,10 +14,28 @@ class MemberDashboardController extends Controller
     {
         $user = Auth::user();
 
-        $jadwal = Pickup::where('user_id',$user->id)->latest()->take(5)->get();
-        $totalKontribusi = Contribution::where('user_id',$user->id)->sum('berat_sampah');
-        $totalSHU = Distribution::where('user_id',$user->id)->sum('jumlah_diterima');
+        // Transparansi: Total kontribusi sampah disetor
+        $totalKontribusi = Contribution::where('user_id', $user->id)->sum('berat_sampah');
+        
+        // Transparansi: Total SHU yang diterima
+        $totalSHU = Distribution::where('user_id', $user->id)->sum('jumlah_diterima');
+        
+        // Pickup request terbaru (untuk monitoring)
+        $pickupTerbaru = Pickup::where('user_id', $user->id)
+            ->latest()
+            ->take(5)
+            ->get();
+        
+        // Pickup bulan ini
+        $pickupBulanIni = Pickup::where('user_id', $user->id)
+            ->whereMonth('tanggal', now()->month)
+            ->count();
 
-        return view('member.dashboard', compact('jadwal','totalKontribusi','totalSHU'));
+        return view('member.dashboard', compact(
+            'totalKontribusi',
+            'totalSHU',
+            'pickupTerbaru',
+            'pickupBulanIni'
+        ));
     }
 }

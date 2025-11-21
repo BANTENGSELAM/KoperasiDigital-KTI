@@ -15,16 +15,9 @@ class DemoDataSeeder extends Seeder
 {
     public function run(): void
     {
-        // Buat user admin
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@koperasi.test'],
-            [
-                'name' => 'Admin Koperasi',
-                'password' => Hash::make('password'),
-            ]
-        );
-        $admin->assignRole('admin');
-
+        // Comment data dummy - uncomment jika diperlukan untuk testing
+        
+        /*
         // Buat user restoran/UMKM
         $users = collect([
             ['name' => 'Restoran A', 'email' => 'restoa@test.com'],
@@ -71,7 +64,7 @@ class DemoDataSeeder extends Seeder
             ]);
         }
 
-        // Distribusi SHU contoh (langsung dihitung acak)
+        // Distribusi SHU contoh
         $totalPendapatan = Sales::sum('total');
         $totalPengeluaran = Ledger::where('type', 'expense')->sum('amount');
         $shuBersih = $totalPendapatan - $totalPengeluaran;
@@ -88,5 +81,6 @@ class DemoDataSeeder extends Seeder
                 'periode' => now()->format('Y-m'),
             ]);
         }
+        */
     }
 }

@@ -7,11 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Distribution extends Model
 {
     protected $fillable = [
-        'user_id','kontribusi','jumlah_diterima'
+        'user_id', 'kontribusi', 'jumlah_diterima'
+    ];
+
+    protected $casts = [
+        'kontribusi' => 'float',
+        'jumlah_diterima' => 'decimal:2',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
