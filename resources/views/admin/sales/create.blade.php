@@ -6,12 +6,12 @@
 <form action="{{ route('admin.sales.store') }}" method="POST">
     @csrf
 
-    <label>Batch Kompos</label>
+    {{-- <label>Batch Kompos</label>
     <select name="batch_id" class="border p-2 w-full mb-3">
         @foreach($batches as $b)
             <option value="{{ $b->id }}">{{ $b->kode_batch }}</option>
         @endforeach
-    </select>
+    </select> --}}
 
     <label>Pembeli</label>
     <input type="text" name="pembeli" class="border p-2 w-full mb-3">

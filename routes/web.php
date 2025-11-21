@@ -3,17 +3,18 @@
 use Illuminate\Support\Facades\Route;
 
 // Admin Controllers
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\SHUController;
 use App\Http\Controllers\UMKMPickupController;
 use App\Http\Controllers\Admin\SalesController;
-use App\Http\Controllers\Admin\AnggotaController;
 
 // Petugas & Member
+use App\Http\Controllers\Admin\AnggotaController;
 use App\Http\Controllers\EducationalPostController;
 use App\Http\Controllers\Admin\AdminSalesController;
-use App\Http\Controllers\Admin\CompostBatchController;
 
 // Edukasi publik & edukator
+use App\Http\Controllers\Admin\CompostBatchController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Petugas\PetugasPickupController;
 use App\Http\Controllers\Member\MemberDashboardController;
@@ -35,6 +36,12 @@ Route::get('/edukasi', [EducationalPostController::class, 'public'])
 // =======================
 require __DIR__.'/auth.php';
 
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 // ======================================================
 // ADMIN ROUTES

@@ -1,4 +1,4 @@
-@extends('layouts.app') {{-- atau layouts.petugas jika ada --}}
+@extends('layouts.petugas') {{-- atau layouts.petugas jika ada --}}
 
 @section('content')
 <div class="max-w-6xl mx-auto p-6">
